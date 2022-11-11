@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Артем Петров](https://up.htmlacademy.ru/nodejs-2/2/user/2003613).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий (sench) Железцов](https://htmlacademy.ru/profile/sench).
 
 ---
 
