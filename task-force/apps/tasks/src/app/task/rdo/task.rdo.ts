@@ -31,7 +31,7 @@ export default class TaskRdo {
   public clientId: string;
 
   @ApiProperty({
-    description: 'Task category id',
+    description: 'Task task-category id',
     example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3'
   })
   @Expose()

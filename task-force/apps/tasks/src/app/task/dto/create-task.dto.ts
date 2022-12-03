@@ -20,7 +20,7 @@ export default class CreateTaskDto {
   public clientId: string;
 
   @ApiProperty({
-    description: 'Task category id',
+    description: 'Task task-category id',
     example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3'
   })
   public categoryId: string;
