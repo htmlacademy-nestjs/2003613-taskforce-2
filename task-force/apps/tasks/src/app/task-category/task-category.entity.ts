@@ -1,10 +1,10 @@
-import { TaskTag } from '@task-force/shared-types';
+import { TaskCategory } from '@task-force/shared-types';
 
-export class TaskCategoryEntity implements TaskTag {
+export class TaskCategoryEntity implements TaskCategory {
   public id: number;
   public title: string;
 
-  constructor(category: TaskTag) {
+  constructor(category: TaskCategory) {
     this.fillEntity(category);
   }
 
@@ -12,7 +12,7 @@ export class TaskCategoryEntity implements TaskTag {
     return {...this};
   }
 
-  public fillEntity(category: TaskTag) {
+  public fillEntity(category: TaskCategory) {
     this.id = category?.id;
     this.title = category?.title;
   }
