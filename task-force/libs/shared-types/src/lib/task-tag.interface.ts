@@ -1,3 +1,4 @@
-export interface TaskTag {
-  name: string;
+export interface TaskCategory {
+  id?: number;
+  title: string;
 }
