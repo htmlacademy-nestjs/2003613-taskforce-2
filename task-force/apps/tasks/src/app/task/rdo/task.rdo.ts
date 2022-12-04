@@ -7,7 +7,7 @@ export default class TaskRdo {
     example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3',
   })
   @Expose()
-  public id: string;
+  public id: number;
 
   @ApiProperty({
     description: 'Task title, string length min 20 max 50 characters',
