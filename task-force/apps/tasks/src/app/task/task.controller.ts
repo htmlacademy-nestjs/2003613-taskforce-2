@@ -42,7 +42,7 @@ export class TaskController {
     status: HttpStatus.OK,
     description: 'The task is found.'
   })
-  async show(@Param('id') id: string){
+  async show(@Param('id') id: number){
     const existTask = await this.taskService.getTaskById(id);
     return fillObject(TaskRdo, existTask);
   }
@@ -65,7 +65,7 @@ export class TaskController {
     status: HttpStatus.OK,
     description: 'The new task was successfully created.'
   })
-  async destroy(@Param('id') id: string){
+  async destroy(@Param('id') id: number){
     await this.taskService.delete(id);
   }
 }

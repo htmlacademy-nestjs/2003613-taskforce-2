@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {City, UserRole} from "@task-force/shared-types";
+import {City} from "@task-force/shared-types";
 
 export default class UpdateUserDto {
   @ApiProperty({

@@ -1,12 +1,13 @@
-import { Task, TaskStatus } from '@task-force/shared-types';
+import { City, Task, TaskStatus } from '@task-force/shared-types';
 
 export class TaskEntity {
-  public id: string;
+  public id: number;
   public title: string;
   public description: string;
   public clientId: string;
   public categoryId: string;
   public dueDate: Date;
+  public city: City;
   public status: TaskStatus;
   public cost: number;
   public address: string;
@@ -32,6 +33,7 @@ export class TaskEntity {
     this.clientId = task.clientId;
     this.categoryId = task.categoryId;
     this.dueDate = task.dueDate;
+    this.city = task.city;
     this.status = task.status;
     this.cost = task?.budget;
     this.address = task?.address;

@@ -38,11 +38,11 @@ export class TaskService {
     return dto;
   }
 
-  async getTaskById(taskId: string) {
+  async getTaskById(taskId: number) {
     return this.taskRepository.findById(taskId);
   }
 
-  async delete(taskId: string) {
+  async delete(taskId: number) {
     await this.taskRepository.destroy(taskId);
   }
 

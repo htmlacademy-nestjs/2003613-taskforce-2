@@ -1,4 +1,4 @@
-import { City, User, UserClient, UserExecutor, UserRole } from '@task-force/shared-types';
+import { City, User, UserRole } from '@task-force/shared-types';
 import { compare, genSalt, hash } from 'bcrypt';
 import { SALT_ROUNDS } from './user.constant';
 
