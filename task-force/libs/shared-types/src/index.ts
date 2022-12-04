@@ -8,5 +8,6 @@ export * from './lib/task.interface';
 export * from './lib/task-category.interface';
 export * from './lib/task-status.enum';
 export * from './lib/task-tag.interface';
+export * from './lib/request.interface';
 export * from './lib/response.interface';
 export * from './lib/comment.interface';
