@@ -13,7 +13,7 @@ import UpdateUserDto from './dto/update-user.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserMemoryRepository
+    private readonly userRepository: UserMemoryRepository,
   ) {}
 
   async register(dto: CreateUserDto) {
