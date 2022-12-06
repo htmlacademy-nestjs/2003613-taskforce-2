@@ -39,15 +39,15 @@ export class UserEntity implements User {
   }
 
   public fillEntity(user: User) {
-    this._id = user?._id;
-    this.name = user?.name;
-    this.email = user?.email;
-    this.city = user?.city;
-    this.passwordHash = user?.passwordHash;
-    this.dateBirth = user?.dateBirth;
-    this.role = user?.role;
-    this.avatar = user?.avatar;
-    this.info = user?.info;
+    this._id = user._id;
+    this.name = user.name;
+    this.email = user.email;
+    this.city = user.city;
+    this.passwordHash = user.passwordHash;
+    this.dateBirth = user.dateBirth;
+    this.role = user.role;
+    this.avatar = user.avatar;
+    this.info = user.info;
 
     if (user.role === UserRole.Client) {
     this.taskPublishedCount = user?.taskPublishedCount;

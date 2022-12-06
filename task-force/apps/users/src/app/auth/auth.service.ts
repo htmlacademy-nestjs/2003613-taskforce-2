@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@task-force/shared-types';
 import * as dayjs from 'dayjs';
-import { UserMemoryRepository } from '../user/user-memory.repository';
 import { UserEntity } from '../user/user.entity';
+import UserRepository from '../user/user.repository';
 import { AuthUser } from './auth.constant';
 import CreateUserDto from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -13,7 +13,7 @@ import UpdateUserDto from './dto/update-user.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserMemoryRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async register(dto: CreateUserDto) {

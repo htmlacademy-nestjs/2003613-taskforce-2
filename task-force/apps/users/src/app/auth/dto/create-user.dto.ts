@@ -34,7 +34,7 @@ export default class CreateUserDto {
 
   @ApiProperty({
     description: 'User role',
-    example: 'Client'
+    example: 'client'
   })
   public role: UserRole;
 }
