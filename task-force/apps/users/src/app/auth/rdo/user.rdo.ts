@@ -64,44 +64,48 @@ export class UserRdo {
     description: 'Count of all tasks that client has created',
     example: '10',
   })
+  @Expose({groups: [UserRole.Client]})
   public taskPublishedCount?: number;
 
   @ApiProperty({
     description: 'Count of client\s tasks with status \"New\"',
     example: '10',
   })
+  @Expose({groups: [UserRole.Client]})
   taskNewCount?: number;
 
   @ApiProperty({
     description: 'List of executor\s occupations',
     example: ['plumber', 'locksmith',  'mechanic'],
   })
-  @Expose()
+  @Expose( {groups: [UserRole.Executor]})
   public occupations?: string[];
 
   @ApiProperty({
     description: 'Executor rating',
     example: '10',
   })
-  @Expose()
+  @Expose({groups: [UserRole.Executor]})
   public rating?: number;
 
   @ApiProperty({
     description: 'Executor rank',
     example: '10',
   })
-  @Expose()
+  @Expose({groups: [UserRole.Executor]})
   public rank?: number;
 
   @ApiProperty({
     description: 'Count of tasks that executor has done',
     example: '10',
   })
+  @Expose({groups: [UserRole.Executor]})
   public taskDoneCount?: number;
 
   @ApiProperty({
     description: 'Count of tasks that executor has failed',
     example: '10',
   })
+  @Expose({groups: [UserRole.Executor]})
   public taskFailedCount?: number;
 }

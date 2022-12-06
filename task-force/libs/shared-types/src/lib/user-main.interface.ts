@@ -1,7 +1,7 @@
 import {City, UserRole} from "@task-force/shared-types";
 
 export interface UserMain {
-  _id: string,
+  _id?: string,
   name: string,
   email: string,
   city: City,

@@ -25,7 +25,8 @@ export class AuthController {
   })
   async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.register(dto);
-    return fillObject(UserRdo, newUser);
+    const groups = [newUser.role];
+    return fillObject(UserRdo, newUser, groups);
   }
 
   @Post('login')
