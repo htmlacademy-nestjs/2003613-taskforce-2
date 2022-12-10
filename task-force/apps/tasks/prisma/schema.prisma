@@ -3,9 +3,44 @@
 
 generator client {
   provider = "prisma-client-js"
+  output = "../../../node_modules/.prisma/client"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Task {
+  id             Int             @id @default(autoincrement())
+  title          String
+  description    String
+  clientId       String
+  category       TaskCategory    @relation(fields: [categoryId], references: [id])
+  categoryId     Int
+  status         String
+  dueDate        DateTime?        //@default(dbgenerated("('0000-00-00 00:00:00')"))
+  publishAt      DateTime        @default(now())
+  createdAt      DateTime        @default(now())
+  city           String
+  address        String?
+  budget         Int?
+  taskTags       TaskTag[]
+  imagePath      String?
+  executorId     String?
+  requestIds     String[]
+  commentIds     Int[]
+  reviewId       Int?
+}
+
+model TaskCategory {
+  id             Int             @id @default(autoincrement())
+  title          String
+  tasks          Task[]
+}
+
+model TaskTag {
+  id             Int             @id @default(autoincrement())
+  title          String
+  tasks          Task[]
 }
