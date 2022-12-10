@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { TaskCategory, TaskTag } from '@task-force/shared-types';
 import { Expose } from 'class-transformer';
 
 export default class TaskRdo {
   @ApiProperty({
     description: 'The uniq task id',
-    example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3',
+    example: '4353642828136379763',
   })
   @Expose()
   public id: number;
@@ -31,25 +32,32 @@ export default class TaskRdo {
   public clientId: string;
 
   @ApiProperty({
-    description: 'Task task-category id',
-    example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3'
+    description: 'Task task-category entity',
+    example: {id: 1, title: 'Перевозка'}
   })
   @Expose()
-  public categoryId: string;
+  public taskCategory: TaskCategory;
+
+  @ApiProperty({
+    description: 'Task creation date (ISO format)',
+    example: '2022-11-01'
+  })
+  @Expose()
+  public publishAt: Date;
 
   @ApiProperty({
     description: 'Task due date (ISO format)',
     example: '2022-11-06'
   })
   @Expose()
-  dueDate?: Date;
+  public dueDate?: Date;
 
   @ApiProperty({
     description: 'Task execution address, string length min 10 max 255 characters',
     example: 'Some text…'
   })
   @Expose()
-  address?: string;
+  public address?: string;
 
   @ApiProperty({
     description: 'Task estimation client\'s proposal, zero or positive number',
@@ -59,11 +67,11 @@ export default class TaskRdo {
   public budget?: number;
 
   @ApiProperty({
-    description: 'Array of task\'s tag ids',
-    example: ['d04eb35d', '4e2b']
+    description: 'Array of task\'s tag entities',
+    example: [{id: 1, title: 'циклевка'}, {id: 2, title: 'ванная'}]
   })
   @Expose()
-  tagIds?: string[];
+  taskTags?: TaskTag[];
 
   @ApiProperty({
     description: 'Path to task image in png or jpg format max 1mb',
@@ -73,23 +81,16 @@ export default class TaskRdo {
   imagePath?: string;
 
   @ApiProperty({
-    description: 'Executor\'s responses count',
-    example: '5'
+    description: 'Executor\'s requests ids',
+    example: ['4353642828136379763', '4353642828136379763']
   })
   @Expose()
-  public responsesCount;
+  public requestIds?: number[];
 
   @ApiProperty({
-    description: 'Task comments count',
-    example: '4'
+    description: 'Task comments ids',
+    example: ['4353642828136379763', '4353642828136379763']
   })
   @Expose()
-  public commentsCount;
-
-  @ApiProperty({
-    description: 'Task creation date (ISO format)',
-    example: '2022-11-01'
-  })
-  @Expose()
-  public postDate;
+  public commentIds?: number[];
 }

@@ -39,9 +39,9 @@ export default class TasksRequestDto {
 
   @ApiProperty({
     description: 'Task category id to filter by',
-    example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3'
+    example: 4353642828136379763
   })
-  public categoryId?: string;
+  public taskCategory?: number;
 
   @ApiProperty({
     description: 'Task city name to filter by',
@@ -51,8 +51,8 @@ export default class TasksRequestDto {
   public city?: City;
 
   @ApiProperty({
-    description: 'Task tag ids to filter by',
-    example: 'd04eb35d'
+    description: 'Task tag id to filter by',
+    example: 4353642828136379763
   })
-  tagId?: string;
+  taskTag?: number;
 }

@@ -21,9 +21,9 @@ export default class CreateTaskDto {
 
   @ApiProperty({
     description: 'Task task-category id',
-    example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3'
+    example: '4353642828136379763'
   })
-  public categoryId: string;
+  public taskCategory: number;
 
   @ApiProperty({
     description: 'Task due date (ISO format)',
@@ -45,9 +45,9 @@ export default class CreateTaskDto {
 
   @ApiProperty({
     description: 'Array of task\'s tag ids',
-    example: ['d04eb35d', '4e2b']
+    example: [4353642828136379763, 4353642828136379763]
   })
-  tagIds?: string[];
+  taskTags?: number[];
 
   @ApiProperty({
     description: 'Path to task image in png or jpg format max 1mb',
