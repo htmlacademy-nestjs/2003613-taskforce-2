@@ -19,12 +19,14 @@ async function fillDb() {
             address: 'ул. Добронравова, д. 7',
             budget: 5000,
             taskTags: {
-              create: [
+              connectOrCreate: [
                 {
-                title: 'ванная'
+                  create: {title: 'ванная'},
+                  where: {title: 'ванная'},
                 },
                 {
-                title: 'кухня'
+                  create: {title: 'кухня'},
+                  where: {title: 'кухня'},
                 }
               ]
             },
@@ -50,12 +52,14 @@ async function fillDb() {
             address: 'ул. Годунова, д. 3',
             budget: 1000,
             taskTags: {
-              create: [
+              connectOrCreate: [
                 {
-                  title: 'лопата'
+                  create: {title: 'лопата'},
+                  where: {title: 'лопата'},
                 },
                 {
-                  title: 'земля'
+                  create: {title: 'земля'},
+                  where: {title: 'земля'},
                 }
               ]
             },
@@ -71,12 +75,14 @@ async function fillDb() {
             address: 'ул. Серебрянникова, д. 24',
             budget: 1500,
             taskTags: {
-              create: [
+              connectOrCreate: [
                 {
-                  title: 'ботва'
+                  create: {title: 'ботва'},
+                  where: {title: 'ботва'},
                 },
                 {
-                  title: 'земля'
+                  create: {title: 'земля'},
+                  where: {title: 'земля'},
                 }
               ]
             },
