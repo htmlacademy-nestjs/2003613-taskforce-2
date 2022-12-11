@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export default class CreateTaskCategoryDto {
+export default class UpdateTaskCategoryDto {
   @ApiProperty({
     description: 'The uniq task category title',
     example: 'Уборка'

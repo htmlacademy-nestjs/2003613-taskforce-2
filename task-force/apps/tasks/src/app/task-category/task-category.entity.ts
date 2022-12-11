@@ -1,6 +1,6 @@
-import { TaskCategory } from '@task-force/shared-types';
+import { Entity, TaskCategory } from '@task-force/shared-types';
 
-export class TaskCategoryEntity implements TaskCategory {
+export class TaskCategoryEntity implements Entity<TaskCategoryEntity>, TaskCategory {
   public id: number;
   public title: string;
 
@@ -12,8 +12,8 @@ export class TaskCategoryEntity implements TaskCategory {
     return {...this};
   }
 
-  public fillEntity(category: TaskCategory) {
-    this.id = category?.id;
-    this.title = category?.title;
+  public fillEntity(entity: TaskCategory) {
+    this.id = entity.id;
+    this.title = entity.title;
   }
 }
