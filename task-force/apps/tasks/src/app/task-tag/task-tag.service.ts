@@ -1,34 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import CreateTagDto from '../task-category/dto/create-task-category.dto';
-import { TaskTagMemoryRepository } from './task-tag-memory.repository';
+import { TaskTag } from '@task-force/shared-types';
+import CreateTaskTagDto from './dto/create-task-tag.dto';
+import UpdateTaskTagDto from './dto/update-task-tag.dto';
 import { TaskTagEntity } from './task-tag.entity';
-
+import { TaskTagRepository } from './task-tag.repository';
 
 @Injectable()
 export class TaskTagService {
+
   constructor(
-    private readonly taskTagRepository: TaskTagMemoryRepository
+    private readonly tagRepository: TaskTagRepository
   ) {}
-  async create(dto: CreateTagDto) {
-    const {
-      title,
-    } = dto;
 
-    const existTag = await this.taskTagRepository.findByTitle(title);
-
-    if (existTag){
-      return existTag;
-    }
-
-    const categoryEntity = new TaskTagEntity(dto);
-    return this.taskTagRepository.create(categoryEntity);
+  async create(dto: CreateTaskTagDto): Promise<TaskTag> {
+    const tagEntity = new TaskTagEntity(dto);
+    return this.tagRepository.create(tagEntity);
   };
 
-  async getTags() {
-    return this.taskTagRepository.index();
+  async get() {
+    return this.tagRepository.find();
   }
 
-  async getTagById(id: number) {
-    return this.taskTagRepository.findById(id);
+  async getById(id: number) {
+    return this.tagRepository.findById(id);
+  }
+
+  async update(id: number, dto: UpdateTaskTagDto): Promise<TaskTag> {
+    return this.tagRepository.update(id, new TaskTagEntity(dto));
+  }
+
+  async delete(id: number): Promise<void> {
+    this.tagRepository.destroy(id);
   }
 }
