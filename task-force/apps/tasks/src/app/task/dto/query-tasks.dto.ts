@@ -2,17 +2,19 @@ import { ApiProperty } from '@nestjs/swagger';
 import { City, TaskStatus } from '@task-force/shared-types';
 import { Expose } from 'class-transformer';
 
-export default class TasksRequestDto {
+export default class QueryTasksDto {
   @ApiProperty({
     description: 'Descending sort task by creation date',
     example: 'true'
   })
   public sortNewestTasks?: boolean;
+
   @ApiProperty({
     description: 'Descending sort task by count of executor\'s responses',
     example: 'true'
   })
   public sortMostRequestedTasks?: boolean;
+
   @ApiProperty({
     description: 'Descending sort task by count of comments',
     example: 'true'

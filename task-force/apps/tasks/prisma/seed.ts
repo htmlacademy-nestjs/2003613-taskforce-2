@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 
+
 const prisma = new PrismaClient();
 
 async function fillDb() {
-  await prisma.taskCategory.upsert({
+  await prisma.category.upsert({
     where: { id: 1 },
     update: {},
     create: {
@@ -18,7 +19,7 @@ async function fillDb() {
             city: 'Москва',
             address: 'ул. Добронравова, д. 7',
             budget: 5000,
-            taskTags: {
+            tags: {
               connectOrCreate: [
                 {
                   create: {title: 'ванная'},
@@ -36,7 +37,7 @@ async function fillDb() {
       },
     }
   });
-  await prisma.taskCategory.upsert({
+  await prisma.category.upsert({
     where: { id: 2 },
     update: {},
     create: {
@@ -51,7 +52,7 @@ async function fillDb() {
             city: 'Владивосток',
             address: 'ул. Годунова, д. 3',
             budget: 1000,
-            taskTags: {
+            tags: {
               connectOrCreate: [
                 {
                   create: {title: 'лопата'},
@@ -74,7 +75,7 @@ async function fillDb() {
             city: 'Санкт-Петербург',
             address: 'ул. Серебрянникова, д. 24',
             budget: 1500,
-            taskTags: {
+            tags: {
               connectOrCreate: [
                 {
                   create: {title: 'ботва'},

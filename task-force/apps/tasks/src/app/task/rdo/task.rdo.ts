@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TaskCategory, TaskTag } from '@task-force/shared-types';
+import { City, TaskStatus, TaskTag } from '@task-force/shared-types';
 import { Expose } from 'class-transformer';
 
 export default class TaskRdo {
@@ -32,18 +32,33 @@ export default class TaskRdo {
   public clientId: string;
 
   @ApiProperty({
-    description: 'Task task-category entity',
+    description: 'Task task-category id',
     example: {id: 1, title: 'Перевозка'}
   })
   @Expose()
-  public taskCategory: TaskCategory;
+  public categoryId: number;
 
   @ApiProperty({
-    description: 'Task creation date (ISO format)',
-    example: '2022-11-01'
+    description: 'Task status',
+    example: 'Some text…'
   })
   @Expose()
-  public publishAt: Date;
+  public status: TaskStatus;
+
+
+  @ApiProperty({
+    description: 'Task city',
+    example: 'Some text…'
+  })
+  @Expose()
+  public city: City;
+
+  @ApiProperty({
+    description: 'Task execution address, string length min 10 max 255 characters',
+    example: 'Some text…'
+  })
+  @Expose()
+  public address?: string;
 
   @ApiProperty({
     description: 'Task due date (ISO format)',
@@ -53,11 +68,11 @@ export default class TaskRdo {
   public dueDate?: Date;
 
   @ApiProperty({
-    description: 'Task execution address, string length min 10 max 255 characters',
-    example: 'Some text…'
+    description: 'Task creation date (ISO format)',
+    example: '2022-11-01'
   })
   @Expose()
-  public address?: string;
+  public publishAt: Date;
 
   @ApiProperty({
     description: 'Task estimation client\'s proposal, zero or positive number',
@@ -71,7 +86,7 @@ export default class TaskRdo {
     example: [{id: 1, title: 'циклевка'}, {id: 2, title: 'ванная'}]
   })
   @Expose()
-  taskTags?: TaskTag[];
+  tags?: TaskTag[];
 
   @ApiProperty({
     description: 'Path to task image in png or jpg format max 1mb',

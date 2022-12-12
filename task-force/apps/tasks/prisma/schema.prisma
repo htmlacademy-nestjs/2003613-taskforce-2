@@ -16,30 +16,30 @@ model Task {
   title          String
   description    String
   clientId       String
-  category       TaskCategory    @relation(fields: [categoryId], references: [id])
+  category       Category    @relation(fields: [categoryId], references: [id])
   categoryId     Int
   status         String
-  dueDate        DateTime?        //@default(dbgenerated("('0000-00-00 00:00:00')"))
+  dueDate        DateTime?
   publishAt      DateTime        @default(now())
   createdAt      DateTime        @default(now())
   city           String
   address        String?
   budget         Int?
-  taskTags       TaskTag[]
+  tags           Tag[]
   imagePath      String?
   executorId     String?
-  requestIds     String[]
+  requestIds     Int[]
   commentIds     Int[]
   reviewId       Int?
 }
 
-model TaskCategory {
+model Category {
   id             Int             @id @default(autoincrement())
   title          String          @unique
   tasks          Task[]
 }
 
-model TaskTag {
+model Tag {
   id             Int             @id @default(autoincrement())
   title          String          @unique
   tasks          Task[]

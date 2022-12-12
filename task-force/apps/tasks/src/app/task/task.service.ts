@@ -1,45 +1,43 @@
 import { Injectable } from '@nestjs/common';
-import { Task, TaskStatus } from '@task-force/shared-types';
+import { TaskStatus } from '@task-force/shared-types';
+import { TaskTagRepository } from '../task-tag/task-tag.repository';
 import CreateTaskDto from './dto/create-task.dto';
-import TasksRequestDto from './dto/tasks-request.dto';
 import UpdateTaskDto from './dto/update-task.dto';
-import { TaskMemoryRepository } from './task-memory.repository';
 import { TaskEntity } from './task.entity';
+import { TaskRepository } from './task.repository';
 
 @Injectable()
 export class TaskService {
 
   constructor(
-    private readonly taskRepository: TaskMemoryRepository
+    private readonly taskRepository: TaskRepository,
+    private readonly tagRepository: TaskTagRepository
   ) {}
 
   async create(dto: CreateTaskDto) {
-    const task = {
-      ...dto, status: TaskStatus.New
-    } as Task;
-    const taskEntity = new TaskEntity(task);
-
+    const taskTags = (dto?.tags?.length)
+    ? await this.tagRepository.find([...dto.tags])
+    : [];
+    const date = new Date(dto.dueDate);
+    const taskEntity = new TaskEntity({ ...dto, dueDate: date, tags: taskTags, status: TaskStatus.New});
     return this.taskRepository.create(taskEntity);
   }
 
-  async update(dto: UpdateTaskDto) {
+  async get() {
+    return this.taskRepository.find();
+  }
+
+  async getById(id: number) {
+    return this.taskRepository.findById(id);
+  }
+
+  async update(id: number, dto: UpdateTaskDto) {
     const {
-      id, status,
+      status,
     } = dto;
     const task = await this.taskRepository.findById(id);
     const taskEntity = new TaskEntity({...task, status});
     return this.taskRepository.update(id, taskEntity);
-  }
-
-  async getTasks(dto: TasksRequestDto) {
-    /*
-    Метод будет принимать dto с фильтрами и на основе его параметров конструировать запрос к модели.
-    */
-    return dto;
-  }
-
-  async getTaskById(taskId: number) {
-    return this.taskRepository.findById(taskId);
   }
 
   async delete(taskId: number) {

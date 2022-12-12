@@ -1,21 +1,20 @@
 import { City } from './city.enum';
-import { TaskCategory } from './task-category.interface';
 import { TaskStatus } from './task-status.enum';
 import { TaskTag } from './task-tag.interface';
 
 export interface Task {
-  id: number,
+  id?: number,
   title: string;
   description: string;
   clientId: string;
-  taskCategory: TaskCategory;
-  publishAt?: Date;
+  categoryId: number;
   status: TaskStatus;
-  dueDate?: Date;
   city: City;
   address?: string;
+  dueDate?: Date;
+  publishAt?: Date;
   budget?: number;
-  taskTags?: TaskTag[];
+  tags?: TaskTag[];
   imagePath?: string;
   executorId?: string;
   requestIds?: number[];
