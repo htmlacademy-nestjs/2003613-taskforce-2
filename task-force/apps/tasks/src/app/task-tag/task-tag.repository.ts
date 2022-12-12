@@ -1,8 +1,10 @@
+import { Injectable } from '@nestjs/common';
 import { CRUDRepository } from '@task-force/core';
 import { TaskTag } from '@task-force/shared-types';
 import { PrismaService } from '../prisma/prisma.service';
 import { TaskTagEntity } from './task-tag.entity';
 
+@Injectable()
 export class TaskTagRepository implements CRUDRepository<TaskTagEntity, number, TaskTag>{
   constructor(
     private readonly prisma: PrismaService
