@@ -6,8 +6,8 @@ import { TaskCategoryService } from './task-category.service';
 
 @Module({
   imports: [],
-  providers: [TaskCategoryService, TaskCategoryRepository],
   controllers: [TaskCategoryController],
+  providers: [TaskCategoryService, TaskCategoryRepository],
   exports: [TaskCategoryRepository],
 })
 export class TaskCategoryModule {}
