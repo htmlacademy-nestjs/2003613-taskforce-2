@@ -1,40 +1,71 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {City, UserRole} from "@taskforce/shared-types";
+import { City, UserRole } from '@taskforce/shared-types';
+import { IsEmail, IsEnum, IsISO8601, Length } from 'class-validator';
+import { AuthUserError, UserApiDescription, UserNameLength, UserPasswordLength } from '../auth.constant';
 
 export default class CreateUserDto {
   @ApiProperty({
-    description: 'User unique address',
+    description: UserApiDescription.Email,
     example: 'user@user.local'
   })
+  @IsEmail(
+    {},
+    {message: AuthUserError.EmailNotValid},
+  )
   public email: string;
 
   @ApiProperty({
-    description: 'User name and surname',
+    description: UserApiDescription.Name,
     example: 'Keks Academiev',
   })
+  @Length(
+    UserNameLength.Min,
+    UserNameLength.Max,
+    {
+      message: AuthUserError.NameNotValid
+    })
   public name: string;
 
   @ApiProperty({
-    description: 'User city name',
-    example: 'Москва'
+    description: UserApiDescription.City,
+    example: City.Moscow
   })
-  public city: City;
+  @IsEnum(
+    City,
+    {
+      message: AuthUserError.CityIsWrong,
+      })
+  public city: string;
 
   @ApiProperty({
-    description: 'User password',
+    description: UserApiDescription.Password,
     example: '123456'
   })
+  @Length(
+    UserPasswordLength.Min,
+    UserPasswordLength.Max,
+    {
+      message: AuthUserError.PasswordNotValid
+    })
   public password: string;
 
   @ApiProperty({
-    description: 'User birth date',
+    description: UserApiDescription.DateBirth,
     example: '1981-03-12',
   })
-  public dateBirth: Date;
+  @IsISO8601({
+    message: AuthUserError.DateBirthNotValid,
+  })
+  public dateBirth: string;
 
   @ApiProperty({
-    description: 'User role',
-    example: 'client'
+    description: UserApiDescription.Role,
+    example: UserRole.Client
   })
-  public role: UserRole;
+  @IsEnum(
+    UserRole,
+    {
+      message: AuthUserError.RoleIsWrong
+  })
+  public role: string;
 }

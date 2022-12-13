@@ -2,8 +2,8 @@ import {City, UserRole} from "@taskforce/shared-types";
 
 export interface UserMain {
   _id?: string,
-  name: string,
   email: string,
+  name: string,
   city: City,
   passwordHash: string,
   dateBirth: Date,

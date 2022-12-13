@@ -1,52 +1,53 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { City, UserRole } from '@taskforce/shared-types';
 import { Expose } from 'class-transformer';
+import { UserApiDescription } from '../auth.constant';
 
 export class UserRdo {
   @ApiProperty({
-    description: 'The uniq user id',
+    description: UserApiDescription.Id,
     example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3',
   })
   @Expose({ name: '_id' })
   public id: string;
 
   @ApiProperty({
-    description: 'User email',
+    description: UserApiDescription.Email,
     example: 'user@user.local',
   })
   @Expose()
   public email: string;
 
   @ApiProperty({
-    description: 'User name and surname',
+    description: UserApiDescription.Name,
     example: 'Keks Academiev',
   })
   @Expose()
   public name: string;
 
   @ApiProperty({
-    description: 'User city name',
+    description: UserApiDescription.City,
     example: 'Москва',
   })
   @Expose()
   public city: City;
 
   @ApiProperty({
-    description: 'User date birth (ISO format)',
+    description: UserApiDescription.DateBirth,
     example: '1981-03-12',
   })
   @Expose()
   public dateBirth: string;
 
   @ApiProperty({
-    description: 'User role',
+    description: UserApiDescription.Role,
     example: 'Client',
   })
   @Expose()
   public role: UserRole;
 
   @ApiProperty({
-    description: 'User avatar path',
+    description: UserApiDescription.Avatar,
     example: '/images/user.png',
 
   })
@@ -54,56 +55,56 @@ export class UserRdo {
   public avatar: string;
 
   @ApiProperty({
-    description: 'User info',
+    description: UserApiDescription.Info,
     example: 'Some text…',
   })
   @Expose()
   public info: string;
 
   @ApiProperty({
-    description: 'Count of all tasks that client has created',
+    description: UserApiDescription.TasksPublished,
     example: '10',
   })
   @Expose({groups: [UserRole.Client]})
   public taskPublishedCount?: number;
 
   @ApiProperty({
-    description: 'Count of client\s tasks with status \"New\"',
+    description: UserApiDescription.TasksNew,
     example: '10',
   })
   @Expose({groups: [UserRole.Client]})
   taskNewCount?: number;
 
   @ApiProperty({
-    description: 'List of executor\s occupations',
+    description: UserApiDescription.Occupation,
     example: ['plumber', 'locksmith',  'mechanic'],
   })
   @Expose( {groups: [UserRole.Executor]})
   public occupations?: string[];
 
   @ApiProperty({
-    description: 'Executor rating',
-    example: '10',
+    description: UserApiDescription.Rating,
+    example: '5',
   })
   @Expose({groups: [UserRole.Executor]})
   public rating?: number;
 
   @ApiProperty({
-    description: 'Executor rank',
+    description: UserApiDescription.Rank,
     example: '10',
   })
   @Expose({groups: [UserRole.Executor]})
   public rank?: number;
 
   @ApiProperty({
-    description: 'Count of tasks that executor has done',
+    description: UserApiDescription.TaskDone,
     example: '10',
   })
   @Expose({groups: [UserRole.Executor]})
   public taskDoneCount?: number;
 
   @ApiProperty({
-    description: 'Count of tasks that executor has failed',
+    description: UserApiDescription.TaskFailed,
     example: '10',
   })
   @Expose({groups: [UserRole.Executor]})
