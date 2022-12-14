@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { fillObject } from '@taskforce/core';
 import { MongoidValidationPipe } from '../pipes/mongoid-validation.pipe';
@@ -8,6 +8,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import UpdateUserAvatarDto from './dto/update-user-avatar.dto';
 import UpdateUserPasswordDto from './dto/update-user-password.dto';
 import UpdateUserDto from './dto/update-user.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserAvatarRdo } from './rdo/user-avatar.rdo';
 import { UserRdo } from './rdo/user.rdo';
@@ -42,6 +43,7 @@ export class AuthController {
     return fillObject(LoggedUserRdo, verifiedUser);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch('password')
   @ApiResponse({
     type: LoggedUserRdo,
@@ -53,6 +55,7 @@ export class AuthController {
     return fillObject(LoggedUserRdo, updatedUser);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch('avatar')
   @ApiResponse({
     type: UserAvatarRdo,
@@ -64,6 +67,7 @@ export class AuthController {
     return fillObject(UserAvatarRdo, updatedUser);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiResponse({
     type: UserRdo,
@@ -75,6 +79,7 @@ export class AuthController {
     return fillObject(UserRdo, updatedUser);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiResponse({
     type: UserRdo,

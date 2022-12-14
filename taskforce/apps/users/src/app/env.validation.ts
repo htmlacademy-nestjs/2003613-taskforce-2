@@ -40,6 +40,7 @@ class EnvironmentsConfig {
 }
 
 export function validateEnvironments(config: Record<string, unknown>) {
+  console.log({...config});
   const environmentsConfig = plainToInstance(
     EnvironmentsConfig,
     config,

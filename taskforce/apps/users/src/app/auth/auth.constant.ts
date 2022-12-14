@@ -1,7 +1,30 @@
 import { City, TaskStatus, UserRole } from '@taskforce/shared-types';
 
+
+export const enum UserPasswordLength {
+  Min = 6,
+  Max = 12,
+}
+
+export const enum UserNameLength {
+  Min = 3,
+  Max = 50,
+}
+
+export const enum UserInfoLength {
+  Max = 300,
+}
+
+export const enum UserOccupationCount {
+  Max = 5,
+}
+
+export const enum UserAge {
+  Min = 18,
+}
+
 export const AuthUserError = {
-  AgeNotValid: `User should be alder than ${UserAge.Min}`,
+  AgeNotValid: `User should be older than ${UserAge.Min}`,
   CityIsWrong: `User city name field must contain any of these values: ${Object.values(City).join(', ')}`,
   DateBirthNotValid: 'The user date birth is not valid',
   EmailNotValid: 'The email is not valid',
@@ -36,27 +59,5 @@ export const UserApiDescription = {
   TasksNew: `Count of client's tasks with status "${TaskStatus.New}"`,
   TasksPublished: 'Count of all tasks that client has created',
   Token: 'Access token',
-
 } as const;
 
-export const enum UserPasswordLength {
-  Min = 6,
-  Max = 12,
-}
-
-export const enum UserNameLength {
-  Min = 3,
-  Max = 50,
-}
-
-export const enum UserInfoLength {
-  Max = 300,
-}
-
-export const enum UserOccupationCount {
-  Max = 5,
-}
-
-export const enum UserAge {
-  Min = 18,
-}

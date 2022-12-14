@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { User } from '@taskforce/shared-types';
 import { UserEntity } from '../user/user.entity';
 import UserRepository from '../user/user.repository';
@@ -13,6 +14,7 @@ import UpdateUserDto from './dto/update-user.dto';
 export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly jwtService: JwtService,
   ) {}
 
   async register(dto: CreateUserDto) {
@@ -46,7 +48,7 @@ export class AuthService {
     const existUser = await this.userRepository.findByEmail(email);
 
     if (!existUser) {
-      throw new Error(AuthUserError.NotFound);
+      throw new UnauthorizedException(AuthUserError.NotFound);
     }
 
     const userEntity = new UserEntity(existUser);
@@ -69,7 +71,7 @@ export class AuthService {
     const existUser = await this.userRepository.findByEmail(email);
 
     if (!existUser) {
-      throw new Error(AuthUserError.NotFound);
+      throw new UnauthorizedException(AuthUserError.NotFound);
     }
     const userEntity = new UserEntity({...existUser, avatar});
     return this.userRepository.update(userEntity._id, userEntity);
@@ -100,5 +102,18 @@ export class AuthService {
     }
     const newUserEntity = new UserEntity({...existUser, ...dto});
     return this.userRepository.update(newUserEntity._id, newUserEntity);
+  }
+
+  async loginUser(user: User) {
+    const payload = {
+      sub: user._id,
+      email: user.email,
+      role: user.role,
+      name: user.name,
+    };
+
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 }
