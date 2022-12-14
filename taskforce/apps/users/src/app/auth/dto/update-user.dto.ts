@@ -1,8 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {City} from "@taskforce/shared-types";
-import { ArrayMaxSize, IsArray, IsEnum, IsISO8601, Length, MaxLength } from 'class-validator';
+import { ArrayMaxSize, IsArray, IsEnum, IsISO8601, Length, MaxLength, Validate } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { AuthUserError, UserApiDescription, UserInfoLength, UserNameLength } from '../auth.constant';
+import { AgeValidator } from '../../validators/age-validator';
+import {
+  AuthUserError,
+  UserApiDescription,
+  UserInfoLength,
+  UserNameLength,
+  UserOccupationCount,
+} from '../auth.constant';
 
 export default class UpdateUserDto {
   @ApiProperty({
@@ -26,7 +33,7 @@ export default class UpdateUserDto {
     {
       message: AuthUserError.CityIsWrong
     })
-  public city?: string;
+  public city?: City;
 
   @ApiProperty({
     description: UserApiDescription.Info,
@@ -46,7 +53,13 @@ export default class UpdateUserDto {
   @IsISO8601({
     message: AuthUserError.DateBirthNotValid,
   })
-  public dateBirth?: string;
+  @Validate(
+    AgeValidator,
+    {
+      message: AuthUserError.AgeNotValid
+    })
+  @Transform(({value}) => new Date(value))
+  public dateBirth: Date;
 
   @ApiProperty({
     description: UserApiDescription.Occupation,
@@ -54,6 +67,10 @@ export default class UpdateUserDto {
   })
   @IsArray()
   @Transform(({value}) => new Set(value.map(item => item.toLowerCase())))
-  @ArrayMaxSize(5)
+  @ArrayMaxSize(
+    UserOccupationCount.Max,
+    {
+      message: AuthUserError.OccupationNotValid
+    })
   public occupations?: string[];
 }

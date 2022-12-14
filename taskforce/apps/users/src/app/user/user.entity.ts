@@ -4,8 +4,8 @@ import { SALT_ROUNDS } from './user.constant';
 
 export class UserEntity implements User {
   public _id: string;
-  public name: string;
   public email: string;
+  public name: string;
   public city: City;
   public passwordHash: string;
   public dateBirth: Date;
@@ -40,8 +40,8 @@ export class UserEntity implements User {
 
   public fillEntity(user: User) {
     this._id = user._id;
-    this.name = user.name;
     this.email = user.email;
+    this.name = user.name;
     this.city = user.city;
     this.passwordHash = user.passwordHash;
     this.dateBirth = user.dateBirth;

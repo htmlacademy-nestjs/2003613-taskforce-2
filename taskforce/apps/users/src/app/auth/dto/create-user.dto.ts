@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { City, UserRole } from '@taskforce/shared-types';
-import { IsEmail, IsEnum, IsISO8601, Length } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsEmail, IsEnum, IsISO8601, Length, Validate } from 'class-validator';
+import { AgeValidator } from '../../validators/age-validator';
 import { AuthUserError, UserApiDescription, UserNameLength, UserPasswordLength } from '../auth.constant';
 
 export default class CreateUserDto {
@@ -35,7 +37,8 @@ export default class CreateUserDto {
     {
       message: AuthUserError.CityIsWrong,
       })
-  public city: string;
+  @Transform(({value}) => value as City)
+  public city: City;
 
   @ApiProperty({
     description: UserApiDescription.Password,
@@ -56,7 +59,13 @@ export default class CreateUserDto {
   @IsISO8601({
     message: AuthUserError.DateBirthNotValid,
   })
-  public dateBirth: string;
+  @Validate(
+    AgeValidator,
+    {
+      message: AuthUserError.AgeNotValid
+    })
+  @Transform(({value}) => new Date(value))
+  public dateBirth: Date;
 
   @ApiProperty({
     description: UserApiDescription.Role,
@@ -67,5 +76,6 @@ export default class CreateUserDto {
     {
       message: AuthUserError.RoleIsWrong
   })
-  public role: string;
+  @Transform(({value}) => value as UserRole)
+  public role: UserRole;
 }

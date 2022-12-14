@@ -1,6 +1,7 @@
 import { City, TaskStatus, UserRole } from '@taskforce/shared-types';
 
 export const AuthUserError = {
+  AgeNotValid: `User should be alder than ${UserAge.Min}`,
   CityIsWrong: `User city name field must contain any of these values: ${Object.values(City).join(', ')}`,
   DateBirthNotValid: 'The user date birth is not valid',
   EmailNotValid: 'The email is not valid',
@@ -8,6 +9,7 @@ export const AuthUserError = {
   InfoNotValid: `User info should not be more than ${UserInfoLength.Max} chars length`,
   NameNotValid: `User name, min ${UserNameLength.Min}, max ${UserNameLength.Max} chars length`,
   NotFound: 'User not found',
+  OccupationNotValid: `Maximum count of executor's occupation is ${UserOccupationCount.Max}`,
   PasswordNotValid: `Password min length is  ${UserPasswordLength.Min}, max is ${UserPasswordLength.Max}`,
   PasswordIsWrong: 'User password is wrong',
   RoleIsWrong: `User role field must contains any of these values: ${Object.values(UserRole).join(', ')}`,
@@ -53,4 +55,8 @@ export const enum UserInfoLength {
 
 export const enum UserOccupationCount {
   Max = 5,
+}
+
+export const enum UserAge {
+  Min = 18,
 }
