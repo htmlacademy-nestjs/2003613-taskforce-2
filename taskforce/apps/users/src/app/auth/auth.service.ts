@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@taskforce/shared-types';
-import * as dayjs from 'dayjs';
 import { UserEntity } from '../user/user.entity';
 import UserRepository from '../user/user.repository';
-import { AuthUser } from './auth.constant';
+import { AuthUserError } from './auth.constant';
 import CreateUserDto from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import UpdateUserAvatarDto from './dto/update-user-avatar.dto';
@@ -23,8 +22,7 @@ export class AuthService {
     } = dto;
 
     const user = {
-      name, email, role, avatar: '',
-      dateBirth: dayjs(dateBirth).toDate(),
+      name, email, role, avatar: '', dateBirth,
       city, passwordHash: '',
     } as User;
 
@@ -32,7 +30,7 @@ export class AuthService {
     await this.userRepository.findByEmail(email);
 
   if (existUser) {
-    throw new Error(AuthUser.Exists);
+    throw new Error(AuthUserError.Exists);
 }
 
   const userEntity =
@@ -48,12 +46,12 @@ export class AuthService {
     const existUser = await this.userRepository.findByEmail(email);
 
     if (!existUser) {
-      throw new Error(AuthUser.NotFound);
+      throw new Error(AuthUserError.NotFound);
     }
 
     const userEntity = new UserEntity(existUser);
     if (! await userEntity.comparePassword(password)) {
-      throw new Error(AuthUser.WrongPassword);
+      throw new Error(AuthUserError.PasswordIsWrong);
     }
 
     return userEntity.toObject();
@@ -71,7 +69,7 @@ export class AuthService {
     const existUser = await this.userRepository.findByEmail(email);
 
     if (!existUser) {
-      throw new Error(AuthUser.NotFound);
+      throw new Error(AuthUserError.NotFound);
     }
     const userEntity = new UserEntity({...existUser, avatar});
     return this.userRepository.update(userEntity._id, userEntity);
@@ -98,7 +96,7 @@ export class AuthService {
     const existUser = await this.userRepository.findById(id);
 
     if (!existUser) {
-      throw new Error(AuthUser.NotFound);
+      throw new Error(AuthUserError.NotFound);
     }
     const newUserEntity = new UserEntity({...existUser, ...dto});
     return this.userRepository.update(newUserEntity._id, newUserEntity);

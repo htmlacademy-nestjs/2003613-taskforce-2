@@ -1,6 +1,7 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { fillObject } from '@taskforce/core';
+import { MongoidValidationPipe } from '../pipes/mongoid-validation.pipe';
 import { AuthService } from './auth.service';
 import CreateUserDto from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -41,7 +42,7 @@ export class AuthController {
     return fillObject(LoggedUserRdo, verifiedUser);
   }
 
-  @Put('password')
+  @Patch('password')
   @ApiResponse({
     type: LoggedUserRdo,
     status: HttpStatus.OK,
@@ -52,7 +53,7 @@ export class AuthController {
     return fillObject(LoggedUserRdo, updatedUser);
   }
 
-  @Put('avatar')
+  @Patch('avatar')
   @ApiResponse({
     type: UserAvatarRdo,
     status: HttpStatus.OK,
@@ -63,13 +64,13 @@ export class AuthController {
     return fillObject(UserAvatarRdo, updatedUser);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiResponse({
     type: UserRdo,
     status: HttpStatus.OK,
     description: 'User data has been successfully updated'
   })
-  async updateUserData(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+  async updateUserData(@Param('id', MongoidValidationPipe) id: string, @Body() dto: UpdateUserDto) {
     const updatedUser = await this.authService.updateUserById(id, dto);
     return fillObject(UserRdo, updatedUser);
   }
@@ -80,7 +81,7 @@ export class AuthController {
     status: HttpStatus.OK,
     description: 'User is found'
   })
-  async show(@Param('id') id: string) {
+  async show(@Param('id', MongoidValidationPipe) id: string) {
     const existUser = await this.authService.getUser(id);
     return fillObject(UserRdo, existUser);
   }
