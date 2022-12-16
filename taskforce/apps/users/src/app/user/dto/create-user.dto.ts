@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { City, UserRole } from '@taskforce/shared-types';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsEnum, IsISO8601, Length, Validate } from 'class-validator';
+import { IsDate, IsEmail, IsEnum, Length, Validate } from 'class-validator';
 import { AgeValidator } from '../../validators/age-validator';
-import { AuthUserError, UserApiDescription, UserNameLength, UserPasswordLength } from '../auth.constant';
+import { AuthUserError, UserApiDescription, UserNameLength, UserPasswordLength } from '../user.constant';
 
 export default class CreateUserDto {
   @ApiProperty({
     description: UserApiDescription.Email,
-    example: 'user@user.local'
+    example: 'user@user.local',
+    required: true,
   })
   @IsEmail(
     {},
@@ -19,6 +20,7 @@ export default class CreateUserDto {
   @ApiProperty({
     description: UserApiDescription.Name,
     example: 'Keks Academiev',
+    required: true,
   })
   @Length(
     UserNameLength.Min,
@@ -30,7 +32,8 @@ export default class CreateUserDto {
 
   @ApiProperty({
     description: UserApiDescription.City,
-    example: City.Moscow
+    example: City.Moscow,
+    required: true,
   })
   @IsEnum(
     City,
@@ -42,7 +45,8 @@ export default class CreateUserDto {
 
   @ApiProperty({
     description: UserApiDescription.Password,
-    example: '123456'
+    example: '123456',
+    required: true,
   })
   @Length(
     UserPasswordLength.Min,
@@ -55,8 +59,9 @@ export default class CreateUserDto {
   @ApiProperty({
     description: UserApiDescription.DateBirth,
     example: '1981-03-12',
+    required: true,
   })
-  @IsISO8601({
+  @IsDate({
     message: AuthUserError.DateBirthNotValid,
   })
   @Validate(
@@ -69,7 +74,8 @@ export default class CreateUserDto {
 
   @ApiProperty({
     description: UserApiDescription.Role,
-    example: UserRole.Client
+    example: UserRole.Client,
+    required: true,
   })
   @IsEnum(
     UserRole,

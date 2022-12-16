@@ -9,7 +9,7 @@ import {
   UserInfoLength,
   UserNameLength,
   UserOccupationCount,
-} from '../auth.constant';
+} from '../user.constant';
 
 export default class UpdateUserDto {
   @ApiProperty({

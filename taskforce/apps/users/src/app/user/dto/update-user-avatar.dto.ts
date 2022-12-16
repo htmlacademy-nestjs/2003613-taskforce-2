@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, Matches } from 'class-validator';
-import { AuthUserError, UserApiDescription } from '../auth.constant';
+import { AuthUserError, UserApiDescription } from '../user.constant';
 
 export default class UpdateUserAvatarDto {
   @ApiProperty({

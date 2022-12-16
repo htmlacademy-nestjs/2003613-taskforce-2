@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserApiDescription } from '../auth.constant';
+import { UserApiDescription } from '../user.constant';
 
 export default class UpdateUserPasswordDto {
   @ApiProperty({

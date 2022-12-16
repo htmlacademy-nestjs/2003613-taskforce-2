@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
-import { UserApiDescription } from '../auth.constant';
+import { UserApiDescription } from '../../user/user.constant';
 
 export class LoggedUserRdo {
   @ApiProperty({
