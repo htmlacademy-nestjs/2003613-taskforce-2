@@ -1,4 +1,4 @@
-import { City, User, UserRole } from '@taskforce/shared-types';
+import { City, FileElement, User, UserRole } from '@taskforce/shared-types';
 import { compare, genSalt, hash } from 'bcrypt';
 import { SALT_ROUNDS } from './user.constant';
 
@@ -10,7 +10,7 @@ export class UserEntity implements User {
   public passwordHash: string;
   public dateBirth: Date;
   public role: UserRole;
-  public avatar?: string;
+  public avatar?: FileElement;
   public info?: string;
   public taskPublishedCount?: number;
   public taskNewCount?: number;

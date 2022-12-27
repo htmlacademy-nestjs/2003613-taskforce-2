@@ -27,8 +27,4 @@ import { jwtOptions } from '../config/jwt.config';
   controllers: [],
   providers: [],
 })
-export class AppModule {
-  constructor() {
-    console.log(getMongoDbConfig());
-  }
-}
+export class AppModule {}

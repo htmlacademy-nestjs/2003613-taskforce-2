@@ -1,5 +1,6 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard, UserData } from '@taskforce/core';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -25,11 +26,18 @@ export class AuthController {
     return this.authService.loginUser(verifiedUser);
   }
 
-  @Post('logout')
-  private async logout() {
-  }
-
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Auth token is valid.'
+  })
   @Get()
-  private async check() {
+  @UseGuards(JwtAuthGuard)
+  private async check(@UserData('_id') id: string) {
+    const user = await this.userService.getById(id);
+    if (!user) {
+      return HttpStatus.UNAUTHORIZED;
+    }
+    return HttpStatus.ACCEPTED;
   }
 }

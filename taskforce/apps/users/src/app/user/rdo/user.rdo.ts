@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { City, UserRole } from '@taskforce/shared-types';
+import { City, FileElement, UserRole } from '@taskforce/shared-types';
 import { Expose, Transform } from 'class-transformer';
-import { UserApiDescription } from '../user.constant';
+import { ResponseGroup, UserApiDescription } from '../user.constant';
 
 export class UserRdo {
   @ApiProperty({
@@ -52,8 +52,8 @@ export class UserRdo {
     example: '/images/user.png',
 
   })
-  @Expose()
-  public avatar: string;
+  @Expose({groups: [ResponseGroup.Avatar, UserRole.Client, UserRole.Executor]})
+  public avatar: FileElement;
 
   @ApiProperty({
     description: UserApiDescription.Info,

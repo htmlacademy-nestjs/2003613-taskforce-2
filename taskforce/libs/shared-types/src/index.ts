@@ -12,3 +12,5 @@ export * from './lib/request.interface';
 export * from './lib/response.interface';
 export * from './lib/comment.interface';
 export * from './lib/entity.interface';
+export * from './lib/file-element';
+export * from './lib/routes.enum';

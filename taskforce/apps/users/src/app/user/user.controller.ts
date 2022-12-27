@@ -1,15 +1,26 @@
-import { Body, Controller, Get, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { fillObject, JwtAuthGuard } from '@taskforce/core';
+import { fillObject, JwtAuthGuard, Roles, UserData } from '@taskforce/core';
 import { AuthService } from '../auth/auth.service';
+import { LoggedUserRdo } from '../auth/rdo/logged-user.rdo';
+import { MongoidValidationPipe } from '../pipes/mongoid-validation.pipe';
 import CreateUserDto from './dto/create-user.dto';
 import UpdateUserPasswordDto from './dto/update-user-password.dto';
 import UpdateUserDto from './dto/update-user.dto';
-import { LoggedUserRdo } from '../auth/rdo/logged-user.rdo';
 import { UserRdo } from './rdo/user.rdo';
-
-
-import { MongoidValidationPipe } from '../pipes/mongoid-validation.pipe';
+import { multerOptions, ResponseGroup } from './user.constant';
 import { UserService } from './user.service';
 
 @ApiTags('user')
@@ -19,16 +30,16 @@ export class UserController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
   ) {}
-//Изучить возможность описывать с помощью @Api*** параметр пути
-  @Post('register')
+
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'The new user has been successfully created.'
   })
+  @Post('register')
   async registerUser(@Body() dto: CreateUserDto) {
     const newUser = await this.userService.create(dto);
-    const groups = [newUser.role];
-    return fillObject(UserRdo, newUser, groups);
+
+    return fillObject(UserRdo, newUser, [newUser.role]);
   }
 
   @ApiResponse({
@@ -36,11 +47,14 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'User is found'
   })
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async show(@Param('id', MongoidValidationPipe) id: string) {
+  @Roles('client')
+  @UseGuards(JwtAuthGuard)
+  async show(
+    @Param('id', MongoidValidationPipe) id: string,) {
     const existUser = await this.userService.getById(id);
-    return fillObject(UserRdo, existUser);
+
+    return fillObject(UserRdo, existUser, [existUser.role]);
   }
 
   @ApiBody({
@@ -52,26 +66,52 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'User data has been successfully updated'
   })
+  @Patch()
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
-  async updateUserData(@Param('id', MongoidValidationPipe) id: string, @Body() dto: UpdateUserDto) {
+  public async updateUserData(@UserData('_id') id: string, @Body() dto: UpdateUserDto) {
     const updatedUser = await this.userService.update(id, dto);
-    return fillObject(UserRdo, updatedUser);
+    return fillObject(UserRdo, updatedUser, [updatedUser.role]);
   }
 
   @ApiBody({
     type: UpdateUserPasswordDto,
-    description: 'Upload user avatar to server and update database'
+    description: 'Update user password'
   })
   @ApiResponse({
     type: LoggedUserRdo,
     status: HttpStatus.OK,
     description: 'User password has been successfully updated'
   })
-  @UseGuards(JwtAuthGuard)
   @Patch('password')
-  async updateUserPassword(@Body() dto: UpdateUserPasswordDto) {
-    const updatedUser = await this.userService.updatePassword(dto);
-    return fillObject(LoggedUserRdo, updatedUser);
+  @UseGuards(JwtAuthGuard)
+  public async updateUserPassword(@UserData('_id') id: string, @Body() dto: UpdateUserPasswordDto) {
+    const updatedUser = await this.userService.updatePassword(id, dto);
+    return fillObject(UserRdo, updatedUser, [ResponseGroup.Logged]);
+  }
+
+  @ApiBody({
+    type: UpdateUserPasswordDto,
+    description: 'Upload user avatar'
+  })
+  @ApiResponse({
+    type: LoggedUserRdo,
+    status: HttpStatus.OK,
+    description: 'User avatar has been successfully uploaded'
+  })
+  @Post('avatar')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('avatar', multerOptions))
+  public async uploadUserAvatar(@UserData() user: any, @UploadedFile() file: any) {
+    const id = user._id;
+
+    const dto: UpdateUserDto = {
+      avatar: {
+        url: file.path,
+        name: file.filename,
+      },
+    };
+
+    const updatedUser = await this.userService.update(id, dto);
+    return fillObject(UserRdo, updatedUser, [ResponseGroup.Avatar]);
   }
 }

@@ -38,7 +38,7 @@ export class UserService {
     } = dto;
 
     const user = {
-      name, email, role, avatar: '', dateBirth,
+      name, email, role, avatar: {}, dateBirth,
       city, passwordHash: '',
     } as User;
 
@@ -66,10 +66,10 @@ export class UserService {
       throw new UnauthorizedException(AuthUserError.NotFound);
     }
     const newUserEntity = new UserEntity({...existUser, ...dto});
-    return this.userRepository.update(newUserEntity._id, newUserEntity);
+    return this.userRepository.update(id, newUserEntity);
   }
 
-  async updatePassword (dto: UpdateUserPasswordDto) {
+  async updatePassword (_id: string, dto: UpdateUserPasswordDto) {
     const {
       email, currentPassword, newPassword,
     } = dto;

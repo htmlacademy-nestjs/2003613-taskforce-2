@@ -16,13 +16,13 @@ export default class UserRepository implements CRUDRepository<UserEntity, string
     return newUser.save();
   }
 
-  public async destroy(id: string): Promise<void> {
-    this.userModel.deleteOne({id});
+  public async destroy(_id: string): Promise<void> {
+    this.userModel.deleteOne({_id});
   }
 
-  public async findById(id: string): Promise<User | null> {
+  public async findById(_id: string): Promise<User | null> {
     return this.userModel
-      .findOne({id})
+      .findOne({_id})
       .exec();
   }
 
@@ -32,9 +32,9 @@ export default class UserRepository implements CRUDRepository<UserEntity, string
       .exec();
   }
 
-  public async update(id: string, item: UserEntity): Promise<User> {
+  public async update(_id: string, item: UserEntity): Promise<User> {
     return this.userModel
-      .findByIdAndUpdate(id, item.toObject(), {new: true})
+      .findByIdAndUpdate(_id, item.toObject(), {new: true})
       .exec();
   }
 }

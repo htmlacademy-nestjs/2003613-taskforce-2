@@ -1,4 +1,4 @@
-# Login user by email and password
+#1 Login user by email and password
 POST http://localhost:3333/api/auth/login HTTP/1.1
 Content-Type: application/json
 
