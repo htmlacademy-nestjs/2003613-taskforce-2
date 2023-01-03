@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail } from 'class-validator';
-import { AuthUserError, UserApiDescription } from '../user.constant';
+import { UserApiError, UserApiDescription } from '../user.constant';
 
 export default class UpdateUserAvatarDto {
   @ApiProperty({
@@ -10,7 +10,7 @@ export default class UpdateUserAvatarDto {
   @IsEmail(
     {},
     {
-      message: AuthUserError.EmailNotValid
+      message: UserApiError.EmailNotValid
     })
   public email: string;
 

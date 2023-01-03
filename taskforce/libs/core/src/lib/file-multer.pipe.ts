@@ -8,7 +8,6 @@ import 'multer';
 @Injectable()
 export class FileMulterPipe implements PipeTransform<Express.Multer.File, Promise<FileElement>> {
   async transform(file: Express.Multer.File): Promise<FileElement> {
-    console.log('FileMulterPipe', {...file}, file.buffer);
     await writeFile(`${file.destination}/${file.originalname}`, file.buffer)
     return {
         url: `${file.destination}/${file.originalname}`,

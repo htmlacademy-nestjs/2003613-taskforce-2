@@ -4,7 +4,7 @@ import { LoginUserDto } from '../auth/dto/login-user.dto';
 import CreateUserDto from './dto/create-user.dto';
 import UpdateUserPasswordDto from './dto/update-user-password.dto';
 import UpdateUserDto from './dto/update-user.dto';
-import { AuthUserError } from './user.constant';
+import { UserApiError } from './user.constant';
 import { UserEntity } from './user.entity';
 import UserRepository from './user.repository';
 
@@ -14,24 +14,24 @@ export class UserService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async verifyUser (dto: LoginUserDto) {
+  async verifyUser (dto: LoginUserDto): Promise<User | null> {
     const {
       email, password
     } = dto;
     const existUser = await this.userRepository.findByEmail(email);
 
     if (!existUser) {
-      throw new UnauthorizedException(AuthUserError.NotFound);
+      throw new UnauthorizedException(UserApiError.NotFound);
     }
 
     const userEntity = new UserEntity(existUser);
     if (! await userEntity.comparePassword(password)) {
-      throw new Error(AuthUserError.PasswordIsWrong);
+      throw new Error(UserApiError.PasswordIsWrong);
     }
 
-    return userEntity.toObject();
+    return userEntity;
   }
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto): Promise<User | null>  {
     const {
       name, email, role, dateBirth,
       city, password
@@ -46,7 +46,7 @@ export class UserService {
       await this.userRepository.findByEmail(email);
 
     if (existUser) {
-      throw new Error(AuthUserError.Exists);
+      throw new Error(UserApiError.Exists);
     }
 
     const userEntity =
@@ -55,15 +55,15 @@ export class UserService {
     return this.userRepository.create(userEntity);
   }
 
-  async getById(id: string) {
+  async getById(id: string): Promise<User | null>  {
     return this.userRepository.findById(id);
   }
 
-  async update(id: string, dto: UpdateUserDto) {
+  async update(id: string, dto: UpdateUserDto): Promise<User | null>  {
     const existUser = await this.userRepository.findById(id);
 
     if (!existUser) {
-      throw new UnauthorizedException(AuthUserError.NotFound);
+      throw new UnauthorizedException(UserApiError.NotFound);
     }
     const newUserEntity = new UserEntity({...existUser, ...dto});
     return this.userRepository.update(id, newUserEntity);

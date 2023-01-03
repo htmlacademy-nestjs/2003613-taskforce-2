@@ -4,7 +4,7 @@ import { Transform } from 'class-transformer';
 import { ArrayMaxSize, IsArray, IsDate, IsEnum, Length, MaxLength, Validate } from 'class-validator';
 import { AgeValidator } from '../../validators/age.validator';
 import {
-  AuthUserError,
+  UserApiError,
   UserApiDescription,
   UserInfoLength,
   UserNameLength,
@@ -21,7 +21,7 @@ export default class UpdateUserDto {
     UserNameLength.Min,
     UserNameLength.Max,
     {
-      message: AuthUserError.NameNotValid
+      message: UserApiError.NameNotValid
     })
   public name?: string;
 
@@ -33,7 +33,7 @@ export default class UpdateUserDto {
   @IsEnum(
     City,
     {
-      message: AuthUserError.CityIsWrong
+      message: UserApiError.CityIsWrong
     })
   public city?: City;
 
@@ -45,7 +45,7 @@ export default class UpdateUserDto {
   @MaxLength(
     UserInfoLength.Max,
     {
-      message: AuthUserError.InfoNotValid
+      message: UserApiError.InfoNotValid
     })
   public info?: string;
 
@@ -55,12 +55,12 @@ export default class UpdateUserDto {
     example: '1981-03-12',
   })
   @IsDate({
-    message: AuthUserError.DateBirthNotValid,
+    message: UserApiError.DateBirthNotValid,
   })
   @Validate(
     AgeValidator,
     {
-      message: AuthUserError.AgeNotValid
+      message: UserApiError.AgeNotValid
     })
   @Transform(({value}) => new Date(value))
   public dateBirth?: Date;
@@ -82,7 +82,7 @@ export default class UpdateUserDto {
   @ArrayMaxSize(
     UserOccupationCount.Max,
     {
-      message: AuthUserError.OccupationNotValid
+      message: UserApiError.OccupationNotValid
     })
   public occupations?: string[];
 }

@@ -31,7 +31,7 @@ export const enum UserAge {
   Min = 18,
 }
 
-export const AuthUserError = {
+export const UserApiError = {
   AgeNotValid: `User should be older than ${UserAge.Min}`,
   CityIsWrong: `User city name field must contain any of these values: ${Object.values(City).join(', ')}`,
   DateBirthNotValid: 'The user date birth is not valid',

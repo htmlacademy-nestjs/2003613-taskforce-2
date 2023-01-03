@@ -3,7 +3,7 @@ import { City, UserRole } from '@taskforce/shared-types';
 import { Transform } from 'class-transformer';
 import { IsDate, IsEmail, IsEnum, Length, Validate } from 'class-validator';
 import { AgeValidator } from '../../validators/age.validator';
-import { AuthUserError, UserApiDescription, UserNameLength, UserPasswordLength } from '../user.constant';
+import { UserApiError, UserApiDescription, UserNameLength, UserPasswordLength } from '../user.constant';
 
 export default class CreateUserDto {
   @ApiProperty({
@@ -13,7 +13,7 @@ export default class CreateUserDto {
   })
   @IsEmail(
     {},
-    {message: AuthUserError.EmailNotValid},
+    {message: UserApiError.EmailNotValid},
   )
   public email: string;
 
@@ -26,7 +26,7 @@ export default class CreateUserDto {
     UserNameLength.Min,
     UserNameLength.Max,
     {
-      message: AuthUserError.NameNotValid
+      message: UserApiError.NameNotValid
     })
   public name: string;
 
@@ -38,7 +38,7 @@ export default class CreateUserDto {
   @IsEnum(
     City,
     {
-      message: AuthUserError.CityIsWrong,
+      message: UserApiError.CityIsWrong,
       })
   @Transform(({value}) => value as City)
   public city: City;
@@ -52,7 +52,7 @@ export default class CreateUserDto {
     UserPasswordLength.Min,
     UserPasswordLength.Max,
     {
-      message: AuthUserError.PasswordNotValid
+      message: UserApiError.PasswordNotValid
     })
   public password: string;
 
@@ -62,12 +62,12 @@ export default class CreateUserDto {
     required: true,
   })
   @IsDate({
-    message: AuthUserError.DateBirthNotValid,
+    message: UserApiError.DateBirthNotValid,
   })
   @Validate(
     AgeValidator,
     {
-      message: AuthUserError.AgeNotValid
+      message: UserApiError.AgeNotValid
     })
   @Transform(({value}) => new Date(value))
   public dateBirth: Date;
@@ -80,7 +80,7 @@ export default class CreateUserDto {
   @IsEnum(
     UserRole,
     {
-      message: AuthUserError.RoleIsWrong
+      message: UserApiError.RoleIsWrong
   })
   @Transform(({value}) => value as UserRole)
   public role: UserRole;
