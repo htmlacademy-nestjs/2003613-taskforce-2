@@ -1,38 +1,40 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { InputExample } from '@taskforce/shared-types';
 import { Expose } from 'class-transformer';
+import { CommentApiDescription } from '../comment.constant';
 
 export default class CommentRdo {
   @ApiProperty({
-    description: 'The comment id',
-    example: '4353642828136379763',
+    description: CommentApiDescription.Id,
+    example: InputExample.PostgreId,
   })
   @Expose()
   public id: number;
 
   @ApiProperty({
-    description: 'Comment creator id',
-    example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3'
+    description: CommentApiDescription.AuthorId,
+    example: InputExample.MongoId,
   })
   @Expose()
   public authorId: string;
 
   @ApiProperty({
-    description: 'Parent task id',
-    example: '4353642828136379763'
+    description: CommentApiDescription.TaskId,
+    example: InputExample.PostgreId,
   })
   @Expose()
   public taskId: number;
 
   @ApiProperty({
-    description: 'Comment creation date (ISO format)',
-    example: '2022-11-06'
+    description: CommentApiDescription.PublishAt,
+    example: InputExample.DateIso,
   })
   @Expose()
-  public dateCreated: Date;
+  public publishAt: Date;
 
   @ApiProperty({
-    description: 'Comment text, string length min 10 max 300 characters',
-    example: 'Some text…'
+    description: CommentApiDescription.Text,
+    example: InputExample.Text,
   })
   @Expose()
   public text: string;
