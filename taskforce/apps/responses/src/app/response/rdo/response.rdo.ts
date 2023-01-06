@@ -1,46 +1,57 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { InputExample } from '@taskforce/shared-types';
 import { Expose } from 'class-transformer';
+import { IsOptional } from 'class-validator';
+import { ResponseApiDescription } from '../response.constant';
 
 export default class ResponseRdo {
   @ApiProperty({
-    description: 'The uniq response id ',
-    example: '4353642828136379763',
+    description: ResponseApiDescription.Id,
+    example: InputExample.PostgreId,
   })
   @Expose()
   public id: number;
 
   @ApiProperty({
-    description: 'The response text, string length min 50 max 500 characters',
-    example: 'Some text…',
+    description: ResponseApiDescription.ResponseText,
+    example: InputExample.Text,
   })
   @Expose()
-  public text: string;
+  public responseText: string;
 
   @ApiProperty({
-    description: 'Task executor id',
-    example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3'
+    description: ResponseApiDescription.ExecutorId,
+    example: InputExample.MongoId
   })
   @Expose()
   public executorId: string;
 
   @ApiProperty({
-    description: 'Response creator id',
-    example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3',
+    description: ResponseApiDescription.ClientId,
+    example: InputExample.MongoId,
   })
   @Expose()
   public clientId: string;
 
   @ApiProperty({
-    description: 'The uniq task id',
-    example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3',
+    description: ResponseApiDescription.TaskId,
+    example: InputExample.PostgreId,
   })
   @Expose()
   public taskId: number;
 
   @ApiProperty({
-    description: 'Evaluation of the task execution, number from 1 to 5',
+    description: ResponseApiDescription.Evaluation,
     example: '4',
   })
   @Expose()
   public evaluation: number;
+
+  @ApiProperty({
+    description: ResponseApiDescription.EvaluationsSum,
+    example: InputExample.Number,
+  })
+  @IsOptional()
+  @Expose()
+  public evaluationsSum: number;
 }

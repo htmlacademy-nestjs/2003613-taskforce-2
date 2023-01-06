@@ -2,7 +2,7 @@ import { Response } from '@taskforce/shared-types';
 
 export default class ResponseEntity implements Response {
   public id: number;
-  public text: string;
+  public responseText: string;
   public executorId: string;
   public clientId: string;
   public taskId: number;
@@ -18,7 +18,7 @@ export default class ResponseEntity implements Response {
 
   public fillEntity(response: Response) {
     this.id = response?.id;
-    this.text = response?.text;
+    this.responseText = response?.responseText;
     this.executorId = response?.executorId;
     this.clientId = response?.clientId;
     this.taskId = response?.taskId;

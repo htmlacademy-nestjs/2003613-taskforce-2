@@ -1,5 +1,6 @@
 export * from './lib/file-element';
 export * from './lib/city.enum';
+export * from './lib/input-example.enum';
 export * from './lib/routes.enum';
 export * from './lib/comment.interface';
 export * from './lib/entity.interface';

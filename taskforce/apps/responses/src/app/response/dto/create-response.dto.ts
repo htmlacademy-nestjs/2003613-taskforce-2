@@ -1,33 +1,53 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { InputExample } from '@taskforce/shared-types';
+import { Transform } from 'class-transformer';
+import { IsInt, IsMongoId, Length, Max, Min } from 'class-validator';
+import { Evaluation, ResponseApiDescription, ResponseApiError, ResponseTextLength } from '../response.constant';
 
 export default class CreateResponseDto {
   @ApiProperty({
-    description: 'The response text, string length min 50 max 500 characters',
-    example: 'Some text…',
+    description: ResponseApiDescription.ResponseText,
+    example: InputExample.Text,
   })
-  public text: string;
+  @Length(
+    ResponseTextLength.Min,
+    ResponseTextLength.Max,
+    {
+      message: ResponseApiError.ResponseTextNotValid
+    })
+  public responseText: string;
 
   @ApiProperty({
-    description: 'Task executor id',
-    example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3'
+    description: ResponseApiDescription.ExecutorId,
+    example: InputExample.MongoId,
+  })
+  @IsMongoId({
+    message: ResponseApiError.ExecutorIdNotValid
   })
   public executorId: string;
 
   @ApiProperty({
-    description: 'Response creator id',
-    example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3',
+    description: ResponseApiDescription.ClientId,
+    example: InputExample.MongoId,
+  })
+  @IsMongoId({
+    message: ResponseApiError.ClientIdNotValid
   })
   public clientId: string;
 
   @ApiProperty({
-    description: 'The uniq task id',
-    example: 'd04eb35d-c36f-4e2b-b828-136379c7c6e3',
+    description: ResponseApiDescription.TaskId,
+    example: InputExample.PostgreId,
   })
+  @Transform(({value}) => +value)
   public taskId: number;
 
   @ApiProperty({
-    description: 'Evaluation of the task execution, number from 1 to 5',
-    example: '4',
+    description: ResponseApiDescription.Evaluation,
+    example: InputExample.Number,
   })
+  @IsInt()
+  @Min(Evaluation.Min)
+  @Max(Evaluation.Max)
   public evaluation: number;
 }

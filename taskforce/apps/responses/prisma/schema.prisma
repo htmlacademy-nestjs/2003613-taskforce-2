@@ -17,6 +17,6 @@ model Response {
   executorId     String
   taskId         Int             @unique
   evaluation     Int
-  text           String
+  responseText   String
   createdAt      DateTime        @default(now())
 }
