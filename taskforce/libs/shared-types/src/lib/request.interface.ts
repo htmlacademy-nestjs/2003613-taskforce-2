@@ -1,8 +1,8 @@
 export interface Request {
   id?: number;
-  text: string;
+  requestText: string;
   costProposal?: number;
   executorId: string;
   taskId: number;
-  dateCreated: Date;
+  publishedAt?: Date;
 }

@@ -1,16 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export default class CreateRequestDto {
   @ApiProperty({
     description: 'The request text, string length min 10 max 300 characters',
     example: 'Some text…',
   })
-  public text: string;
+  public requestText: string;
 
   @ApiProperty({
     description: 'Task estimation executor\'s proposal, zero or positive number',
     example: '1500'
   })
+  @Transform(({value}) => +value)
   public costProposal?: number;
 
   @ApiProperty({
@@ -23,11 +25,12 @@ export default class CreateRequestDto {
     description: 'Requested task id',
     example: '4353642828136379763'
   })
+  @Transform(({value}) => +value)
   public taskId: number;
 
   @ApiProperty({
     description: 'Request creation date (ISO format)',
     example: '2022-11-06'
   })
-  public dateCreated: Date;
+  public publishedAt?: Date;
 }
