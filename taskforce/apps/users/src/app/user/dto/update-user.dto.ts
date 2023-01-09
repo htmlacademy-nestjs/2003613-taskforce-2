@@ -67,7 +67,7 @@ export default class UpdateUserDto {
 
   @ApiProperty({
     required: false,
-    description: UserApiDescription.Avatar,
+    description: UserApiDescription.Image,
     example: '{ url: images/user.png, name: user.png }',
   })
   public avatar?: FileElement;

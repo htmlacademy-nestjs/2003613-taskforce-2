@@ -49,7 +49,7 @@ export class UserEntity implements User {
     this.avatar = user.avatar;
     this.info = user.info;
 
-    if (user.role === UserRole.Client) {
+    if (user.role === UserRole.ClientId) {
     this.taskPublishedCount = user?.taskPublishedCount;
     this.taskNewCount = user?.taskNewCount;
     } else {

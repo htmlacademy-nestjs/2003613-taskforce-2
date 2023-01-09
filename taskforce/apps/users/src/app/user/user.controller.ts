@@ -12,14 +12,16 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { fillObject, JwtAccessGuard, Roles, UserData } from '@taskforce/core';
+import { createMulterOptions, fillObject, JwtAccessGuard, Roles, UserData } from '@taskforce/core';
 import { LoggedUserRdo } from '../auth/rdo/logged-user.rdo';
 import { MongoidValidationPipe } from '../pipes/mongoid-validation.pipe';
 import UpdateUserPasswordDto from './dto/update-user-password.dto';
 import UpdateUserDto from './dto/update-user.dto';
 import { UserRdo } from './rdo/user.rdo';
-import { multerOptions, ResponseGroup } from './user.constant';
+import { MAX_FILE_SIZE, ResponseGroup } from './user.constant';
 import { UserService } from './user.service';
+
+const multerOptions = createMulterOptions(MAX_FILE_SIZE);
 
 @ApiTags('user')
 @Controller('user')
