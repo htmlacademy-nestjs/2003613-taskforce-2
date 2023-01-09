@@ -1,5 +1,7 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from '@taskforce/shared-types';
+import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { CommandEvent, User } from '@taskforce/shared-types';
+import { RABBITMQ_SERVICE } from '../auth/auth.constant';
 import { LoginUserDto } from '../auth/dto/login-user.dto';
 import CreateUserDto from './dto/create-user.dto';
 import UpdateUserPasswordDto from './dto/update-user-password.dto';
@@ -12,6 +14,7 @@ import UserRepository from './user.repository';
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
+    @Inject(RABBITMQ_SERVICE) private readonly rabbitClient: ClientProxy,
   ) {}
 
   async verifyUser (dto: LoginUserDto): Promise<User | null> {
@@ -46,13 +49,24 @@ export class UserService {
       await this.userRepository.findByEmail(email);
 
     if (existUser) {
-      throw new Error(UserApiError.Exists);
+      throw new ConflictException(UserApiError.Exists);
     }
 
     const userEntity =
       await new UserEntity(user).setPassword(password);
 
-    return this.userRepository.create(userEntity);
+    const createdUser = await this.userRepository.create(userEntity);
+
+    this.rabbitClient.emit(
+      { cmd: CommandEvent.AddSubscriber },
+      {
+        email: createdUser.email,
+        lastname: createdUser.name,
+        userId: createdUser._id.toString(),
+      }
+    );
+
+    return createdUser;
   }
 
   async getById(id: string): Promise<User | null>  {

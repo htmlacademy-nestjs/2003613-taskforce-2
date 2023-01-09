@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import databaseConfig from '../config/database.config';
 import { getMongoDbConfig } from '../config/mongodb.config';
+import { rabbitMqOptions } from '../config/rabbitmq.config';
 import { ENV_FILE_PATH } from './app.constant';
 import { AuthModule } from './auth/auth.module';
 import { JwtAccessModule } from './auth/jwt-access.module';
@@ -18,7 +19,7 @@ import { TokenSessionModule } from './tokens/token-session.module';
       cache: true,
       isGlobal: true,
       envFilePath: ENV_FILE_PATH,
-      load: [databaseConfig, jwtConfig],
+      load: [databaseConfig, jwtConfig, rabbitMqOptions],
       validate: validateEnvironments,
     }),
     MongooseModule.forRootAsync(getMongoDbConfig()),

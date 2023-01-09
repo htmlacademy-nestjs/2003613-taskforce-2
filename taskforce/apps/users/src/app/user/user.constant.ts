@@ -2,6 +2,7 @@ import { City, TaskStatus, UserRole } from '@taskforce/shared-types';
 
 export const MAX_FILE_SIZE = 512000;
 export const SALT_ROUNDS = 10;
+export const RABBITMQ_SERVICE = Symbol('RABBITMQ_SERVICE');
 
 export const enum UserPasswordLength {
   Min = 6,

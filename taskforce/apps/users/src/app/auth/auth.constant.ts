@@ -8,3 +8,5 @@ export const AuthApiError = {
   RefreshTokenNotFound: `The refresh token not found, please perform authorization`,
   RefreshTokenIsWrong: `The refresh token not same as last registered refresh token, please perform authorization`,
 } as const;
+
+export const RABBITMQ_SERVICE = Symbol('RABBITMQ_SERVICE');
