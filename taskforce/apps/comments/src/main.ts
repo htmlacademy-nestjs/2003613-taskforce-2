@@ -6,11 +6,12 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
 import { AppModule } from './app/app.module';
+import * as process from 'process';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const commentsApp = await NestFactory.create(AppModule);
+
   const config = new DocumentBuilder()
     .setTitle('The «Comments» service')
     .setDescription('Comments service API')
@@ -18,17 +19,17 @@ async function bootstrap() {
     .build();
 
   const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
+  commentsApp.setGlobalPrefix(globalPrefix);
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('spec', app, document);
+  const document = SwaggerModule.createDocument(commentsApp, config);
+  SwaggerModule.setup('spec', commentsApp, document);
 
-  app.useGlobalPipes(new ValidationPipe({
+  commentsApp.useGlobalPipes(new ValidationPipe({
     skipUndefinedProperties: true
   }));
 
   const port = process.env.PORT || 3335;
-  await app.listen(port);
+  await commentsApp.listen(port);
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
   );
