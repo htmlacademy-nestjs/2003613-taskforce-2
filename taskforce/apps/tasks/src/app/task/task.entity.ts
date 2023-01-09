@@ -1,4 +1,4 @@
-import { City, Entity, Task, TaskStatus, TaskTag } from '@taskforce/shared-types';
+import { City, Entity, FileElement, Task, TaskStatus, TaskTag } from '@taskforce/shared-types';
 
 export class TaskEntity implements Entity<TaskEntity>, Task {
   public id: number;
@@ -13,11 +13,12 @@ export class TaskEntity implements Entity<TaskEntity>, Task {
   public publishAt: Date;
   public budget: number;
   public tags: TaskTag[];
-  public imagePath: string;
+  public taskPicture: FileElement;
   public executorId: string;
-  public requestIds: number[];
-  public commentIds: number[];
-  public reviewId: number;
+  public applicantsCount: number;
+  public applicantsIds?: string[];
+  public commentsCount: number;
+  public isReviewed: boolean;
 
   constructor(task:Task) {
     this.fillEntity(task);
@@ -30,22 +31,23 @@ export class TaskEntity implements Entity<TaskEntity>, Task {
     };
   }
 
-  public fillEntity(entity: Task): void {
+  public fillEntity(entity:  Task): void {
     this.title = entity.title;
     this.description = entity.description;
     this.clientId = entity.clientId;
     this.categoryId = entity.categoryId;
     this.status = entity.status;
     this.city = entity.city;
-    this.address = entity?.address;
+    this.address = entity.address;
     this.dueDate = entity.dueDate;
-    this.publishAt = entity?.publishAt;
+    this.publishAt = new Date();
     this.budget = entity?.budget;
-    this.tags = [...entity.tags];
-    this.imagePath = entity?.imagePath;
-    this.executorId = entity?.executorId;
-    this.requestIds = entity?.requestIds?? [];
-    this.commentIds = entity?.commentIds?? [];
-    this.reviewId = entity?.reviewId;
+    this.tags = entity.tags;
+    this.taskPicture = {...entity.taskPicture};
+    this.executorId = entity.executorId;
+    this.applicantsCount = entity.applicantsCount;
+    this.applicantsIds = entity.applicantsIds;
+    this.commentsCount = entity.commentsCount;
+    this.isReviewed = entity.isReviewed;
   }
 }

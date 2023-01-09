@@ -2,6 +2,8 @@ export * from './lib/file-element';
 export * from './lib/city.enum';
 export * from './lib/input-example.enum';
 export * from './lib/routes.enum';
+export * from './lib/sort-order.enum';
+export * from './lib/sort-type.enum';
 export * from './lib/comment.interface';
 export * from './lib/entity.interface';
 export * from './lib/request.interface';

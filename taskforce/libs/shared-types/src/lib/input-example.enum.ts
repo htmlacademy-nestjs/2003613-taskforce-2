@@ -12,7 +12,7 @@ export const InputExample = {
   Rating: '5',
   Number: '10',
   Occupations: `['plumber', 'locksmith',  'mechanic']`,
-  Avatar: `{ url: /images/user.png, name: user.png, }`,
+  PictureFile: `{ url: /images/user.png, name: user.png, }`,
   MongoId: '63aac1a8d0fe043efd78f0b3',
   PostgreId: '043536428286379763',
   Password: '123456',
