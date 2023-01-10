@@ -1,4 +1,4 @@
-export const NOTIFY_SERVICE_ENV_PATH = 'environments/.notify.env';
+export const NOTIFY_SERVICE_ENV_PATH = 'apps/notify/src/environments/.notify.env';
 
 export enum EnvValidationMessage {
   DBHostRequired = 'MongoDB host is required',
