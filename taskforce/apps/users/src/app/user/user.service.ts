@@ -1,7 +1,8 @@
 import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { createEvent } from '@taskforce/core';
 import { CommandEvent, User } from '@taskforce/shared-types';
-import { RABBITMQ_SERVICE } from '../auth/auth.constant';
+import { RABBITMQ_SERVICE } from '../app.constant';
 import { LoginUserDto } from '../auth/dto/login-user.dto';
 import CreateUserDto from './dto/create-user.dto';
 import UpdateUserPasswordDto from './dto/update-user-password.dto';
@@ -17,23 +18,6 @@ export class UserService {
     @Inject(RABBITMQ_SERVICE) private readonly rabbitClient: ClientProxy,
   ) {}
 
-  async verifyUser (dto: LoginUserDto): Promise<User | null> {
-    const {
-      email, password
-    } = dto;
-    const existUser = await this.userRepository.findByEmail(email);
-
-    if (!existUser) {
-      throw new UnauthorizedException(UserApiError.NotFound);
-    }
-
-    const userEntity = new UserEntity(existUser);
-    if (! await userEntity.comparePassword(password)) {
-      throw new Error(UserApiError.PasswordIsWrong);
-    }
-
-    return userEntity;
-  }
   async create(dto: CreateUserDto): Promise<User | null>  {
     const {
       name, email, role, dateBirth,
@@ -58,7 +42,7 @@ export class UserService {
     const createdUser = await this.userRepository.create(userEntity);
 
     this.rabbitClient.emit(
-      { cmd: CommandEvent.AddSubscriber },
+      createEvent(CommandEvent.AddSubscriber),
       {
         email: createdUser.email,
         lastname: createdUser.name,
@@ -67,6 +51,24 @@ export class UserService {
     );
 
     return createdUser;
+  }
+
+  async verifyUser (dto: LoginUserDto): Promise<User | null> {
+    const {
+      email, password
+    } = dto;
+    const existUser = await this.userRepository.findByEmail(email);
+
+    if (!existUser) {
+      throw new UnauthorizedException(UserApiError.NotFound);
+    }
+
+    const userEntity = new UserEntity(existUser);
+    if (! await userEntity.comparePassword(password)) {
+      throw new Error(UserApiError.PasswordIsWrong);
+    }
+
+    return userEntity;
   }
 
   async getById(id: string): Promise<User | null>  {

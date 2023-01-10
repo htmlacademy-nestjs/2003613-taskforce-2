@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
 import { getRabbitMqConfig } from '../../config/rabbitmq.config';
-import { RABBITMQ_SERVICE } from '../auth/auth.constant';
+import { RABBITMQ_SERVICE } from '../app.constant';
 import { UserController } from './user.controller';
 import { UserModel, UserSchema } from './user.model';
 import UserRepository from './user.repository';

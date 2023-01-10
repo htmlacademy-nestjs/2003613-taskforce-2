@@ -2,10 +2,11 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
 import { fillObject } from '@taskforce/core';
-import { JwtPayload, TokenSession } from '@taskforce/shared-types';
+import { JwtPayload } from '@taskforce/shared-types';
+import { RABBITMQ_SERVICE } from '../app.constant';
 import { TokenSessionEntity } from '../tokens/token-session.entity';
 import TokenSessionRepository from '../tokens/token-session.repository';
-import { AuthApiError, RABBITMQ_SERVICE } from './auth.constant';
+import { AuthApiError } from './auth.constant';
 import { TokenDataDto } from './dto/token-data.dto';
 import { SessionTokenRdo } from './rdo/sesion-token.rdo';
 
@@ -81,8 +82,18 @@ export class AuthService {
     return this.jwtAccessService.decode(token);
   }
 
-  async getSessionByToken(token: string): Promise<TokenSession | null> {
-    const { sub } = await this.getAccessTokenData(token);
-    return this.tokenSessionRepository.findByUserId(sub);
+  async checkAuthorizationStatus(token: string): Promise<boolean> {
+    if (!token){
+      return false;
+    }
+    const authToken = token.replace('Bearer', '').trim();
+    const tokenData = await this.getAccessTokenData(authToken);
+    if (!tokenData) {
+      return false;
+    }
+    const { sub } = tokenData;
+    const activeUserSession = await this.tokenSessionRepository.findByUserId(sub);
+
+    return !!activeUserSession;
   }
 }

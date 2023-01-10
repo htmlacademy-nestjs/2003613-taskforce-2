@@ -37,6 +37,27 @@ class EnvironmentsConfig {
     message: EnvValidationMessage.DBBaseAuthRequired
   })
   public MONGO_AUTH_BASE: string;
+
+  @IsString({
+    message: EnvValidationMessage.RMQUserRequired
+  })
+  public RABBIT_USER: string;
+
+  @IsString({
+    message: EnvValidationMessage.RMQPasswordRequired
+  })
+  public RABBIT_PASSWORD: string;
+
+  @IsString({
+    message: EnvValidationMessage.RMQHostRequired
+  })
+  public RABBIT_HOST: string;
+
+  @IsString({
+    message: EnvValidationMessage.RMQSubscriberQueue
+  })
+  public RABBIT_USERS_SERVICE_QUEUE: string;
+
 }
 
 export function validateEnvironments(config: Record<string, unknown>) {
@@ -45,6 +66,7 @@ export function validateEnvironments(config: Record<string, unknown>) {
     config,
     { enableImplicitConversion: true  },
   );
+  console.log('VALIDATE',config);
 
   const errors = validateSync(
     environmentsConfig, {
