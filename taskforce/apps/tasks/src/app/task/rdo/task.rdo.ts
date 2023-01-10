@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { City, TaskStatus, TaskTag } from '@taskforce/shared-types';
+import { City, FileElement, InputExample, TaskStatus, TaskTag } from '@taskforce/shared-types';
 import { Expose } from 'class-transformer';
 
 export default class TaskRdo {
@@ -90,13 +90,13 @@ export default class TaskRdo {
 
   @ApiProperty({
     description: 'Path to task image in png or jpg format max 1mb',
-    example: 'task-image.png'
+    example: InputExample.PictureFile
   })
   @Expose()
-  imagePath?: string;
+  taskPicture?: FileElement;
 
   @ApiProperty({
-    description: 'Executor\'s requests ids',
+    description: 'Executors requests ids',
     example: ['4353642828136379763', '4353642828136379763']
   })
   @Expose()

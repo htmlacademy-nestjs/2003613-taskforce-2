@@ -1,10 +1,32 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { fillObject } from '@taskforce/core';
+import { createMulterOptions, fillObject } from '@taskforce/core';
+import { UserRole } from '@taskforce/shared-types';
+import { ActionData } from './action-data.interface';
+
 import CreateTaskDto from './dto/create-task.dto';
 import UpdateTaskDto from './dto/update-task.dto';
+import { TaskQuery } from './query/task.query';
 import TaskRdo from './rdo/task.rdo';
+import { MAX_FILE_SIZE, ResponseGroup, TaskAction } from './task.constant';
 import { TaskService } from './task.service';
+
+const multerOptions = createMulterOptions(MAX_FILE_SIZE);
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -24,7 +46,7 @@ export class TaskController {
     return fillObject(TaskRdo, newTask);
   }
 
-  @Get('/:id')
+  @Get(':id/show')
   @ApiResponse({
     type: TaskRdo,
     status: HttpStatus.OK,
@@ -32,7 +54,7 @@ export class TaskController {
   })
   async show(@Param('id') id: string){
     const taskId = parseInt(id, 10);
-    const existTask = await this.taskService.getById(taskId);
+    const existTask = await this.taskService.getTaskById(taskId);
     return fillObject(TaskRdo, existTask);
   }
 
@@ -42,20 +64,42 @@ export class TaskController {
     status: HttpStatus.OK,
     description: 'The new task was successfully created.'
   })
-  async getTasks(){
-    const tasks = await this.taskService.get();
+  async index(@Query () query: TaskQuery){
+    //Hardcode before Rabbit implementation
+    const userRole = UserRole.Executor
+    const tasks = await this.taskService
+      .getNewTasks(query, {userRole: userRole});
     return fillObject(TaskRdo, tasks);
   }
 
-  @Patch('/:id')
+  @Get('my')
+  @ApiResponse({
+    type: TaskRdo,
+    status: HttpStatus.OK,
+    description: 'The new task was successfully created.'
+  })
+  async getMy(@Query () query: TaskQuery){
+    //Hardcode before Rabbit implementation
+    const userId = '12';
+    const userRole = UserRole.Executor
+    const tasks = await this.taskService
+      .getMyTasks(query, {userRole: userRole, userId: userId});
+    return fillObject(TaskRdo, tasks);
+  }
+
+  @Patch('/:taskId/status')
   @ApiResponse({
     type: TaskRdo,
     status: HttpStatus.OK,
     description: 'The task data has been successfully updated.'
   })
-  async updateTaskData(@Param('id') id: string, @Body() dto: UpdateTaskDto){
-    const taskId = parseInt(id, 10);
-    const updatedTask = await this.taskService.update(taskId, dto);
+  async updateTask(@Param('taskId', ParseIntPipe) taskId: number, @Body() dto: UpdateTaskDto){
+    //Hardcode before Rabbit implementation
+    const actionData: ActionData = {
+      userId: '13',
+      userRole: UserRole.Client,
+    }
+    const updatedTask = await this.taskService.updateTaskStatus(taskId, dto, actionData);
     return fillObject(TaskRdo, updatedTask);
   }
 
@@ -68,5 +112,31 @@ export class TaskController {
   async destroy(@Param('id') id: string){
     const taskId = parseInt(id, 10);
     await this.taskService.delete(taskId);
+  }
+
+  @ApiResponse({
+    type: TaskRdo,
+    status: HttpStatus.OK,
+    description: 'Task picture has been successfully uploaded'
+  })
+  @Post('/:taskId/picture')
+  // WIP @UseGuards(JwtAccessGuard)
+  @UseInterceptors(FileInterceptor('picture', multerOptions))
+  public async uploadTaskPicture(@Param('taskId', ParseIntPipe) taskId: number, @UploadedFile() file: any) {
+    //Hardcode before Rabbit implementation
+    const user: ActionData = {
+      userId: '13',
+      userRole: UserRole.Client,
+      action: TaskAction.UploadPicture
+    }
+    const dto: UpdateTaskDto = {
+      taskPicture: {
+        url: file.path,
+        name: file.filename,
+      },
+    };
+
+    const updatedTask = await this.taskService.uploadPicture(taskId, dto, user);
+    return fillObject(TaskRdo, updatedTask, [ResponseGroup.Picture]);
   }
 }

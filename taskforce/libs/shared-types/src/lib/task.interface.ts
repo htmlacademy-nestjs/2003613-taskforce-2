@@ -1,4 +1,5 @@
 import { City } from './city.enum';
+import { FileElement } from './file-element';
 import { TaskStatus } from './task-status.enum';
 import { TaskTag } from './task-tag.interface';
 
@@ -15,9 +16,10 @@ export interface Task {
   publishAt?: Date;
   budget?: number;
   tags?: TaskTag[];
-  imagePath?: string;
+  taskPicture?: FileElement;
   executorId?: string;
-  requestIds?: number[];
-  commentIds?: number[];
-  reviewId?: number;
+  applicantsCount?: number;
+  applicantsIds?: string[],
+  commentsCount?: number;
+  isReviewed?: boolean;
 }

@@ -1,6 +1,6 @@
 export interface Response {
   id?: number;
-  text: string;
+  responseText: string;
   executorId: string;
   clientId: string;
   taskId: number;

@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import CreateRequestDto from './dto/create-request.dto';
-import RequestMemoryRepository from './request-memory.repository';
 import RequestEntity from './request.enity';
+import RequestRepository from './request.repository';
 
 
 @Injectable()
 export class RequestService {
 
   constructor(
-    private readonly requestRepository: RequestMemoryRepository
+    private readonly requestRepository: RequestRepository
   ) {}
 
   async create(dto: CreateRequestDto) {
@@ -18,18 +18,7 @@ export class RequestService {
     return this.requestRepository.create(requestEntity);
   }
 
-
-  async index() {
-    return this.requestRepository.index();
+  async getRequestsByTaskId(taskId: number) {
+    return this.requestRepository.findByTaskId(taskId);
   }
-
-  async getRequestById(requestId: number) {
-    return this.requestRepository.findById(requestId);
-  }
-
-  async delete(requestId: number) {
-    await this.requestRepository.destroy(requestId);
-  }
-
-
 }

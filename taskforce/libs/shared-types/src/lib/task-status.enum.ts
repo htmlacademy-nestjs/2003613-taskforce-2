@@ -1,7 +1,7 @@
 export enum TaskStatus {
   New = 'Новое',
-  InProgress = 'В работе',
+  InProgress = 'Выполняется',
   Rejected = 'Отменено',
-  Done = 'Выполнено',
+  Done = 'Исполнено',
   Failed = 'Провалено',
 }

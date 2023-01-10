@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../../../node_modules/.prisma/client"
+  output = "../../../node_modules/.prisma/tasks-client"
 }
 
 datasource db {
@@ -12,35 +12,36 @@ datasource db {
 }
 
 model Task {
-  id             Int             @id @default(autoincrement())
-  title          String
-  description    String
-  clientId       String
-  category       Category    @relation(fields: [categoryId], references: [id])
-  categoryId     Int
-  status         String
-  dueDate        DateTime?
-  publishAt      DateTime        @default(now())
-  createdAt      DateTime        @default(now())
-  city           String
-  address        String?
-  budget         Int?
-  tags           Tag[]
-  imagePath      String?
-  executorId     String?
-  requestIds     Int[]
-  commentIds     Int[]
-  reviewId       Int?
+  id               Int        @id @default(autoincrement())
+  title            String
+  description      String
+  clientId         String
+  category         Category   @relation(fields: [categoryId], references: [id])
+  categoryId       Int
+  status           String
+  dueDate          DateTime?
+  publishAt        DateTime   @default(now())
+  createdAt        DateTime   @default(now())
+  city             String
+  address          String?
+  budget           Int?       @default(0)
+  tags             Tag[]
+  taskPicture      Json?
+  executorId       String?
+  applicantsCount  Int        @default(0)
+  applicantsIds    String[]
+  commentsCount    Int        @default(0)
+  isReviewed       Boolean    @default(false)
 }
 
 model Category {
-  id             Int             @id @default(autoincrement())
-  title          String          @unique
-  tasks          Task[]
+  id                Int       @id @default(autoincrement())
+  title             String    @unique
+  tasks             Task[]
 }
 
 model Tag {
-  id             Int             @id @default(autoincrement())
-  title          String          @unique
-  tasks          Task[]
+  id                Int       @id @default(autoincrement())
+  title             String    @unique
+  tasks             Task[]
 }

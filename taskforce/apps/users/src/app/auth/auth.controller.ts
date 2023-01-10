@@ -1,87 +1,106 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { fillObject } from '@taskforce/core';
+import { fillObject, JwtAccessGuard, JwtRefreshGuard, UserData } from '@taskforce/core';
+import { TokenSession } from '@taskforce/shared-types';
+import CreateUserDto from '../user/dto/create-user.dto';
+import { UserRdo } from '../user/rdo/user.rdo';
+import { UserService } from '../user/user.service';
+import { AuthApiError } from './auth.constant';
 import { AuthService } from './auth.service';
-import CreateUserDto from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import UpdateUserAvatarDto from './dto/update-user-avatar.dto';
-import UpdateUserPasswordDto from './dto/update-user-password.dto';
-import UpdateUserDto from './dto/update-user.dto';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
-import { UserAvatarRdo } from './rdo/user-avatar.rdo';
-import { UserRdo } from './rdo/user.rdo';
+import TokenDataRdo from './rdo/token-data.rdo';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
   ) {}
 
-  @Post('register')
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'The new user has been successfully created.'
   })
-  async create(@Body() dto: CreateUserDto) {
-    const newUser = await this.authService.register(dto);
-    const groups = [newUser.role];
-    return fillObject(UserRdo, newUser, groups);
+  @Post('signup')
+  async signupUser(@Headers('authorization') token: string, @Body() dto: CreateUserDto) {
+    let existSession: TokenSession;
+    if (token) {
+      const authToken = token.replace('Bearer', '').trim();
+      existSession = await this.authService.getSessionByToken(authToken);
+      }
+    if (existSession) {
+      throw new UnauthorizedException(AuthApiError.AlreadyAuthorized)
+    }
+
+    const newUser = await this.userService.create(dto);
+
+    return fillObject(UserRdo, newUser, [newUser.role]);
   }
 
-  @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     type: LoggedUserRdo,
     status: HttpStatus.OK,
     description: 'User has been successfully logged.'
   })
+  @Post('login')
   async login(@Body() dto: LoginUserDto) {
-    const verifiedUser = this.authService.verifyUser(dto);
-    return fillObject(LoggedUserRdo, verifiedUser);
+    const verifiedUser = await this.userService.verifyUser(dto);
+    const tokenData = fillObject(TokenDataRdo, verifiedUser);
+    return this.authService.generateTokens(tokenData);
   }
 
-  @Put('password')
+  @HttpCode(HttpStatus.OK)
   @ApiResponse({
-    type: LoggedUserRdo,
     status: HttpStatus.OK,
-    description: 'User password has been successfully updated'
+    description: 'Auth token is valid.'
   })
-  async updateUserPassword(@Body() dto: UpdateUserPasswordDto) {
-    const updatedUser = await this.authService.updateUserPassword(dto);
-    return fillObject(LoggedUserRdo, updatedUser);
+  @Get()
+  @UseGuards(JwtAccessGuard)
+  private async check(@UserData('id') id: string) {
+    const user = await this.userService.getById(id);
+    if (!user) {
+      return HttpStatus.UNAUTHORIZED;
+    }
+    return HttpStatus.ACCEPTED;
   }
 
-  @Put('avatar')
+  @HttpCode(HttpStatus.OK)
   @ApiResponse({
-    type: UserAvatarRdo,
     status: HttpStatus.OK,
-    description: 'User avatar has been successfully updated'
+    description: 'The tokens are refreshed.'
   })
-  async updateUserAvatar(@Body() dto: UpdateUserAvatarDto) {
-    const updatedUser = await this.authService.updateUserAvatar(dto);
-    return fillObject(UserAvatarRdo, updatedUser);
+  @Post('refresh')
+  @UseGuards(JwtRefreshGuard)
+  async refreshToken(
+    @UserData('id') userId: string,
+    @UserData('refreshToken') refreshToken: string) {
+    const existUser = await this.userService.getById(userId);
+    const tokenData = fillObject(TokenDataRdo, existUser);
+    return this.authService.refreshTokens(tokenData, refreshToken);
   }
 
-  @Put(':id')
+  @HttpCode(HttpStatus.ACCEPTED)
   @ApiResponse({
-    type: UserRdo,
     status: HttpStatus.OK,
-    description: 'User data has been successfully updated'
+    description: 'The user is logout.'
   })
-  async updateUserData(@Param('id') id: string, @Body() dto: UpdateUserDto) {
-    const updatedUser = await this.authService.updateUserById(id, dto);
-    return fillObject(UserRdo, updatedUser);
-  }
-
-  @Get(':id')
-  @ApiResponse({
-    type: UserRdo,
-    status: HttpStatus.OK,
-    description: 'User is found'
-  })
-  async show(@Param('id') id: string) {
-    const existUser = await this.authService.getUser(id);
-    return fillObject(UserRdo, existUser);
+  @Post('logout')
+  @UseGuards(JwtAccessGuard)
+  async logoutUser(@UserData('id') userId: string,) {
+   await this.authService.deleteRefreshToken(userId);
+   return HttpStatus.ACCEPTED
   }
 }

@@ -1,13 +1,13 @@
-import {City, UserRole} from "@taskforce/shared-types";
+import { City, FileElement, UserRole } from '@taskforce/shared-types';
 
 export interface UserMain {
   _id?: string,
-  name: string,
   email: string,
+  name: string,
   city: City,
   passwordHash: string,
   dateBirth: Date,
   role: UserRole,
-  avatar?: string,
+  avatar?: FileElement,
   info?: string,
 }

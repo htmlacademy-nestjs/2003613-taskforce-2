@@ -1,34 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import CommentMemoryRepository from './comment-memory.repository';
 import CommentEntity from './comment.entity';
+import CommentRepository from './comment.repository';
 import CreateCommentDto from './dto/create-comment.dto';
-
+import { CommentQuery } from './query/comment.query';
 
 @Injectable()
 export class CommentService {
 
   constructor(
-    private readonly commentRepository: CommentMemoryRepository
+    private readonly commentRepository: CommentRepository
   ) {}
 
   async create(dto: CreateCommentDto) {
-
     const commentEntity = new CommentEntity(dto);
-
     return this.commentRepository.create(commentEntity);
   }
 
-
-  async index() {
-    return this.commentRepository.index();
+  async getComments(query: CommentQuery) {
+    return this.commentRepository.find(query);
   }
 
   async getCommentById(commentId: number) {
     return this.commentRepository.findById(commentId);
   }
 
-  async delete(commentId: number) {
+  async deleteComment(commentId: number) {
     await this.commentRepository.destroy(commentId);
   }
 
+  async deleteCommentsByTaskId(taskId: number) {
+    await this.commentRepository.destroyByTaskId(taskId);
+  }
 }

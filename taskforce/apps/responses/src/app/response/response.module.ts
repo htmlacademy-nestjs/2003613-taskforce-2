@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ResponseService } from './response.service';
 import { ResponseController } from './response.controller';
+import ResponseRepository from './response.repository';
+import { ResponseService } from './response.service';
 
 @Module({
-  providers: [ResponseService],
   controllers: [ResponseController],
+  providers: [ResponseService, ResponseRepository],
 })
 export class ResponseModule {}

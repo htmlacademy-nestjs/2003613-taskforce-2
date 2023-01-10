@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Task as Entry } from '@prisma/client';
 import { CRUDRepository } from '@taskforce/core';
-import { City, Task, TaskStatus } from '@taskforce/shared-types';
+import { City, FileElement, SortOrder, SortType, Task, TaskStatus } from '@taskforce/shared-types';
 import { PrismaService } from '../prisma/prisma.service';
+import { FilterParams } from './query/filter-params.interface';
 import { TaskEntity } from './task.entity';
+import { Task as Entry } from '.prisma/tasks-client';
 
 @Injectable()
 export class TaskRepository implements CRUDRepository<TaskEntity, number, Task>{
@@ -11,19 +12,40 @@ export class TaskRepository implements CRUDRepository<TaskEntity, number, Task>{
     private readonly prisma: PrismaService
   ) {}
 
-  private adaptEntryToTask(entry: Entry): Task {
+  private async adaptEntryToTask(entry: Entry): Promise<Task> {
     return {
       ...entry,
+      taskPicture: entry.taskPicture as FileElement,
       city: entry.city as City,
       status: entry.status as TaskStatus,
     };
   }
 
+  private async adaptEntriesToTask(entries: Entry[]): Promise<Task[]> {
+    let tasks: Task[] = [];
+    for (const entry of entries)  {
+      const task = await this.adaptEntryToTask(entry);
+      tasks.push(task);
+    }
+    return tasks;
+  }
+
   public async create(item: TaskEntity): Promise<Task> {
     const entityData = item.toObject();
+    delete entityData.id
     const task = await this.prisma.task.create({
       data: {
-        ...entityData,
+        title: entityData.title,
+        description: entityData.description,
+        clientId: entityData.clientId,
+        categoryId: entityData.categoryId,
+        status: entityData.status,
+        city: entityData.city,
+        address: entityData.address,
+        dueDate: entityData.dueDate,
+        publishAt: entityData.publishAt,
+        budget: entityData.budget,
+
         tags: {
           connect: [...entityData.tags]
         },
@@ -36,14 +58,40 @@ export class TaskRepository implements CRUDRepository<TaskEntity, number, Task>{
     return this.adaptEntryToTask(task);
   }
 
-  public async find(): Promise<Task[]> {
+  public async find({
+    executorId, clientId, categoryId, status,
+    city, tag, sortOrder, sortType, page, limit
+    }: FilterParams) {
+    sortOrder = sortOrder?? SortOrder.Descended;
+    sortType = sortType?? SortType.CreatedAt;
+
     const tasks = await this.prisma.task.findMany({
+      where: {
+        status: status,
+        clientId: clientId,
+        executorId: executorId,
+        categoryId: categoryId,
+        city: city,
+        tags: {
+          some: { title: tag },
+        },
+      },
+      take: limit,
       include: {
         tags: true,
-      }
+        category: true,
+        },
+      orderBy: [
+        {
+          [sortType]: sortOrder,
+        },
+
+      ],
+      skip: page > 0 ? limit * (page - 1) : undefined,
     });
-    return tasks.map((task) => this.adaptEntryToTask(task));
+    return this.adaptEntriesToTask(tasks);
   }
+
 
   public async findById(id: number): Promise<Task | null> {
     const task = await this.prisma.task.findFirst({
@@ -61,19 +109,24 @@ export class TaskRepository implements CRUDRepository<TaskEntity, number, Task>{
 
   public async update(id: number, item: TaskEntity): Promise<Task> {
     const entityData = item.toObject();
-    await this.prisma.task.update({
+    const updatedTask = await this.prisma.task.update({
       where: { id },
       data: {
-        ...entityData,
-        tags: {
-          connect: [...entityData.tags]
-        },
+        status: entityData.status,
+        publishAt: entityData.publishAt,
+        taskPicture: JSON.stringify(entityData.taskPicture),
+        executorId: entityData.executorId,
+        applicantsCount: entityData.applicantsCount,
+        applicantsIds: entityData.applicantsIds,
+        commentsCount: entityData.commentsCount,
+        isReviewed: entityData.isReviewed,
       },
       include: {
         tags: true,
+        category: true,
       }
     });
-    return  this.findById(id);
+    return this.adaptEntryToTask(updatedTask);
   }
 
   public async destroy(id: number): Promise<void> {

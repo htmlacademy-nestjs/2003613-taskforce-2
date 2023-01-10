@@ -1,16 +1,16 @@
-import { City, User, UserRole } from '@taskforce/shared-types';
+import { City, FileElement, User, UserRole } from '@taskforce/shared-types';
 import { compare, genSalt, hash } from 'bcrypt';
 import { SALT_ROUNDS } from './user.constant';
 
 export class UserEntity implements User {
   public _id: string;
-  public name: string;
   public email: string;
+  public name: string;
   public city: City;
   public passwordHash: string;
   public dateBirth: Date;
   public role: UserRole;
-  public avatar?: string;
+  public avatar?: FileElement;
   public info?: string;
   public taskPublishedCount?: number;
   public taskNewCount?: number;
@@ -40,8 +40,8 @@ export class UserEntity implements User {
 
   public fillEntity(user: User) {
     this._id = user._id;
-    this.name = user.name;
     this.email = user.email;
+    this.name = user.name;
     this.city = user.city;
     this.passwordHash = user.passwordHash;
     this.dateBirth = user.dateBirth;
@@ -49,7 +49,7 @@ export class UserEntity implements User {
     this.avatar = user.avatar;
     this.info = user.info;
 
-    if (user.role === UserRole.Client) {
+    if (user.role === UserRole.ClientId) {
     this.taskPublishedCount = user?.taskPublishedCount;
     this.taskNewCount = user?.taskNewCount;
     } else {

@@ -1,35 +1,10 @@
-# Create a new user
-POST http://localhost:3333/api/auth/register HTTP/1.1
-Content-Type: application/json
-
-{
-  "name": "Keks",
-  "email": "user1@notfound.local",
-  "city": "Москва",
-  "password": "123456",
-  "dateBirth": "2012-02-22",
-  "role": "client"
-}
-###
-
-# Login user by email and password
+#1 Login user by email and password
 POST http://localhost:3333/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
   "email": "user@notfound.local",
   "password": "123456"
-}
-###
-
-# Update user's password
-PUT http://localhost:3333/api/auth/password HTTP/1.1
-Content-Type: application/json
-
-{
-  "email": "user@notfound.local",
-  "currentPassword": "123456",
-  "newPassword": "234567"
 }
 ###
 
@@ -55,6 +30,7 @@ Content-Type: application/json
 ###
 
 # Get user by ID
-GET http://localhost:3333/api/auth/d04eb35d-c36f-4e2b-b828-136379c7c6e3 HTTP/1.1
+GET http://localhost:3333/api/user/d04eb35d-c36f-4e2b-b828-136379c7c6e3 HTTP/1.1
+Authorization: Bearer {'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Mzk3MTNhMmIzYjk2ZDA5OTg0OWQ5MjMiLCJlbWFpbCI6InVzZXJAbm90Zm91bmQubG9jYWwiLCJyb2xlIjoiY2xpZW50IiwibmFtZSI6Iktla3MiLCJpYXQiOjE2NzExOTUyMDAsImV4cCI6MTY3MTE5NTI2MH0.jJz24iZhn7YetFhGwA2Dw3uJq0huxwq5OFtBy-80I3w'}
 
 ###
